@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFI ACS Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f4f2;
+    --white: #ffffff;
+    --ink: #111111;
+    --muted: #999999;
+    --border: #e0e0e0;
+    --accent: #d95f1a;
+    --accent-dark: #b34d10;
+    --header-bg: #3d5166;
+    --task-header: #2f3f50;
+    --reveal-bg: #efefed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  header {
+    background: var(--header-bg);
+    padding: 2.2rem 2.5rem 1.8rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .notes-icon-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    padding: 0;
+  }
+
+  .notes-icon-btn:hover { background: var(--accent-dark); transform: scale(1.08); }
+  .notes-icon-btn:active { transform: scale(0.95); }
+  .notes-icon-btn.active { background: var(--accent-dark); }
+
+  .manual-save-btn {
+    background: #2e8b57;
+    border: none;
+    border-radius: 999px;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
+  .manual-save-btn:hover { background: #236b43; transform: scale(1.08); }
+  .manual-save-btn:active { transform: scale(0.95); }
+
+  .edit-mode-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    padding: 0;
+  }
+
+  .edit-mode-btn:hover { background: var(--accent-dark); transform: scale(1.08); }
+  .edit-mode-btn:active { transform: scale(0.95); }
+  .edit-mode-btn.active { background: var(--accent-dark); }
+  .edit-mode-btn.active:hover { background: #8c3b09; }
+
+  header h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  header p {
+    color: #e8f0f8;
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.18s;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .btn-reveal { background: #2e8b57; border-color: #2e8b57; color: #fff; }
+  .btn-reveal:hover { background: #236b43; border-color: #236b43; }
+  .btn-hide-all, .btn-expand, .btn-collapse, .btn-export, .btn-import, .btn-hide {
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+  }
+  .btn-hide-all { background: #888; border-color: #888; color: #fff; }
+  .btn-hide-all:hover { background: #666 !important; border-color: #666 !important; }
+  .btn-hide-all:hover, .btn-expand:hover, .btn-collapse:hover,
+  .btn-export:hover, .btn-import:hover, .btn-hide:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  .area {
+    background: var(--white);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+  }
+
+  .area-header {
+    background: var(--header-bg);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .area-header h2 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .area-header .chevron {
+    color: var(--accent);
+    transition: transform 0.3s;
+    font-size: 1rem;
+  }
+
+  .area-header.collapsed .chevron { transform: rotate(-90deg); }
+
+  .area-body { padding: 1.5rem; }
+  .area-body.hidden { display: none; }
+
+  .task {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .task-header {
+    background: var(--task-header);
+    color: #fff;
+    padding: 0.8rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .task-header .task-ref {
+    display: block;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.15rem;
+  }
+
+  .task-body { padding: 1.2rem; background: var(--white); }
+  .task-body.hidden { display: none; }
+
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #111;
+    margin: 1.2rem 0 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .section-chevron {
+    font-size: 0.8rem;
+    color: #555;
+  }
+
+  .item {
+    margin: 0.7rem 0;
+    display: grid;
+    grid-template-columns: 145px 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.25rem 0.35rem;
+    border-radius: 4px;
+    transition: background 0.15s, outline 0.15s;
+  }
+
+  .item-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.67rem;
+    color: var(--accent);
+    font-weight: 500;
+    padding: 0.25rem 0.4rem;
+    word-break: break-all;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .item:has(.item-code:hover) {
+    background: #fff8f4;
+    outline: 2px solid var(--accent);
+    outline-offset: 0px;
+  }
+
+  .item.no-hover:has(.item-code:hover) {
+    background: transparent;
+    outline: none;
+  }
+
+  .item-code.bookmarked {
+    background: transparent;
+    outline: none;
+  }
+
+  .item.is-bookmarked {
+    background: #fff8f4;
+    border-radius: 4px;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .item.is-bookmarked > .item-code {
+    background: transparent;
+    outline: none;
+  }
+
+  @keyframes pulse-border {
+    0%   { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 1); }
+    50%  { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 0.3); }
+    100% { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 1); }
+  }
+
+  .area-header.bookmark-highlight {
+    animation: pulse-border 1.5s ease-in-out infinite;
+  }
+
+  .task-header.bookmark-highlight {
+    animation: pulse-border 1.5s ease-in-out infinite;
+  }
+
+  .bookmark-banner {
+    display: none;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.55rem 1.4rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    border-radius: 999px;
+    width: fit-content;
+    margin: 1rem auto 0;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(217, 95, 26, 0.35);
+  }
+
+  .bookmark-banner:hover { background: var(--accent-dark); transform: scale(1.03); }
+  .bookmark-banner.visible { display: block; }
+
+  .item-fields { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .item-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.2rem 0;
+  }
+
+  .item-title {
+    font-size: 0.87rem;
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 400;
+    flex: 1;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 3px;
+    padding: 0.1rem 0.3rem;
+    margin: -0.1rem -0.3rem;
+  }
+
+  .item-title.conf-green  { background: #d4f0dc; color: #1a5c30; }
+  .item-title.conf-yellow { background: #fef3c7; color: #7c5c00; }
+  .item-title.conf-red    { background: #fde8e8; color: #7c1d1d; }
+
+  .conf-dots-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    padding-top: 0.15rem;
+  }
+
+  .conf-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    opacity: 0.35;
+    background: transparent;
+    padding: 0;
+  }
+
+  .conf-dot:hover { transform: scale(1.3); opacity: 0.7; }
+
+  .conf-dot.green  { border-color: #2e8b57; }
+  .conf-dot.yellow { border-color: #d4a017; }
+  .conf-dot.red    { border-color: #c0392b; }
+
+  .conf-dot.active { opacity: 1; }
+  .conf-dot.active.green  { background: #2e8b57; }
+  .conf-dot.active.yellow { background: #d4a017; }
+  .conf-dot.active.red    { background: #c0392b; }
+
+  .section-body { }
+  .section-body.hidden { display: none; }
+
+  .section-chevron {
+    font-size: 0.75rem;
+    margin-left: 0.4rem;
+    transition: transform 0.2s;
+  }
+
+  .field-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .field-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.57rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .field-with-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .side-toggle-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.55rem;
+    border: 1.5px solid #2e8b57;
+    border-radius: 999px;
+    background: transparent;
+    color: #2e8b57;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .side-toggle-btn:hover { border-color: #236b43; color: #236b43; }
+
+  .side-toggle-btn.is-hidden {
+    border-color: #aaa;
+    color: #aaa;
+  }
+
+  .side-toggle-btn.is-hidden:hover { border-color: #555; color: #555; }
+
+  .editor-outer {
+    flex: 1;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: #e8e8e8;
+  }
+
+  .editor-outer.summary-type .editor-toolbar,
+  .editor-outer.task-summary-type .editor-toolbar {
+    background: #e4e4e4;
+    border-color: #ddd;
+  }
+
+  .editor-toolbar button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    padding: 0.12rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.5;
+  }
+
+  .editor-toolbar button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .editor-toolbar .tb-bold { font-weight: 700; }
+  .editor-toolbar .tb-italic { font-style: italic; }
+  .editor-toolbar .tb-underline { text-decoration: underline; }
+
+  .reveal-overlay {
+    position: absolute;
+    inset: 0;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    border-radius: 4px;
+    cursor: default;
+  }
+
+  .reveal-overlay span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .reveal-overlay.hidden-overlay { display: none; }
+
+  .editor-outer.is-hidden-state {
+    min-height: 0 !important;
+  }
+
+  .editor-outer.is-hidden-state .rich-editor {
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden;
+  }
+
+  .editor-outer.is-hidden-state .editor-toolbar {
+    display: none;
+  }
+
+  .rich-editor {
+    width: 100%;
+    min-height: 54px;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 0 0 4px 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--ink);
+    background: #f2f2f2;
+    outline: none;
+    overflow-wrap: break-word;
+  }
+
+  .rich-editor:focus { border-color: var(--accent); background: #ebebeb; }
+
+  .rich-editor.summary-editor {
+    background: #eeeeee;
+    border-color: #ddd;
+    min-height: 44px;
+    max-height: 25vh;
+  }
+
+  .rich-editor.summary-editor:focus { border-color: var(--accent); background: #e8e8e8; }
+
+  .rich-editor.task-summary-editor {
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    min-height: 68px;
+    max-height: 30vh;
+  }
+
+  .rich-editor.task-summary-editor:focus { border-color: var(--accent); background: #e8e8e8; }
+
+  .rich-editor:empty:before {
+    content: attr(data-placeholder);
+    color: #ccc;
+    pointer-events: none;
+    display: block;
+  }
+
+  .task-summary-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f0ee;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .task-summary-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+  }
+
+  .more-options-wrap { position: relative; }
+
+  .more-options-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 200;
+    width: 320px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .more-options-menu.open { display: block; }
+
+  .more-options-menu button,
+  .more-options-menu a {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .more-options-menu button { color: #ff6b6b; }
+  .more-options-menu button:hover { background: rgba(255,107,107,0.12); }
+  .more-options-menu a { color: #ffffff; }
+  .more-options-menu a:hover { background: rgba(255,255,255,0.1); }
+
+  .notes-btn {
+    background: #2e8b57 !important;
+    color: #fff !important;
+    border-color: #2e8b57 !important;
+  }
+
+  .notes-btn:hover { background: #236b43 !important; border-color: #236b43 !important; }
+  .notes-btn.active { background: #236b43 !important; border-color: #236b43 !important; }
+
+  .notes-panel {
+    position: fixed;
+    top: 175px;
+    right: -440px;
+    width: 400px;
+    height: calc(100vh - 195px);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .notes-panel.open { right: 1.5rem; opacity: 1; }
+
+  .notes-panel-header {
+    background: var(--header-bg);
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .notes-panel-header h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .notes-panel-close {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .notes-panel-close:hover { opacity: 1; }
+
+  .notes-panel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    overflow: hidden;
+  }
+
+  .notes-editor {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--ink);
+    background: #f8f8f6;
+    outline: none;
+    overflow-y: auto;
+    resize: none;
+  }
+
+  .notes-editor:focus { border-color: #2e8b57; background: #f4f4f2; }
+
+  .notes-editor:empty:before {
+    content: attr(data-placeholder);
+    color: #ccc;
+    pointer-events: none;
+    display: block;
+  }
+
+  .notes-save-indicator {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: #2e8b57;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.4s;
+    text-align: right;
+    height: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .item { grid-template-columns: 20px 1fr; }
+    .item-code { padding-top: 0; }
+  }
+
+  /* ── Password Screen ─────────────────────────────────────────── */
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--header-bg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .lock-screen.hidden { display: none; }
+
+  .lock-card {
+    background: #1e2d3d;
+    border: 1px solid #2e4560;
+    border-radius: 16px;
+    padding: 2.5rem 2.5rem 2rem;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .lock-icon {
+    color: var(--accent);
+    opacity: 0.9;
+  }
+
+  .lock-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+  }
+
+  .lock-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7a9bb5;
+    text-align: center;
+    margin-top: -0.5rem;
+  }
+
+  .lock-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #162232;
+    border: 1.5px solid #2e4560;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .lock-input:focus { border-color: var(--accent); }
+  .lock-input.error { border-color: #e74c3c; animation: shake 0.3s ease; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .lock-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 600;
+  }
+
+  .lock-btn:hover { background: var(--accent-dark); }
+
+  .lock-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: #e74c3c;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    min-height: 1rem;
+    text-align: center;
+  }
+
+  /* ── Change Password Modal ───────────────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal-card {
+    background: #1e2d3d;
+    border: 1px solid #2e4560;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .modal-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .modal-input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    background: #162232;
+    border: 1.5px solid #2e4560;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-input::placeholder { color: #4a6a85; }
+
+  .modal-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.57rem;
+    color: #7a9bb5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: -0.5rem;
+  }
+
+  .modal-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: #e74c3c;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    min-height: 0.9rem;
+  }
+
+  .modal-btns {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+  }
+
+  .modal-btn-save {
+    flex: 1;
+    padding: 0.6rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 600;
+  }
+
+  .modal-btn-save:hover { background: var(--accent-dark); }
+
+  .modal-btn-cancel {
+    flex: 1;
+    padding: 0.6rem;
+    background: transparent;
+    border: 1.5px solid #2e4560;
+    border-radius: 6px;
+    color: #7a9bb5;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-btn-cancel:hover { border-color: #7a9bb5; color: #fff; }
+
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <svg class="lock-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="16" width="24" height="17" rx="3" stroke="currentColor" stroke-width="2"/>
+      <path d="M11 16V11a7 7 0 0114 0v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="18" cy="24" r="2.5" fill="currentColor"/>
+      <line x1="18" y1="26.5" x2="18" y2="29" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="lock-title">CFI ACS Study Guide</div>
+      <div class="lock-subtitle">Enter password to continue</div>
+    </div>
+    <input class="lock-input" id="lockInput" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') unlockApp()">
+    <div class="lock-error" id="lockError"></div>
+    <button class="lock-btn" onclick="unlockApp()">Unlock</button>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="changePwModal">
+  <div class="modal-card">
+    <div class="modal-title">Change Password</div>
+    <div class="modal-label">Current Password</div>
+    <input class="modal-input" id="pwCurrent" type="password" placeholder="Current password">
+    <div class="modal-label">New Password</div>
+    <input class="modal-input" id="pwNew" type="password" placeholder="New password">
+    <div class="modal-label">Confirm New Password</div>
+    <input class="modal-input" id="pwConfirm" type="password" placeholder="Confirm new password">
+    <div class="modal-error" id="pwModalError"></div>
+    <div class="modal-btns">
+      <button class="modal-btn-cancel" onclick="closeChangePw()">Cancel</button>
+      <button class="modal-btn-save" onclick="saveNewPassword()">Save</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>CFI ACS Study Guide</h1>
+      <p>Area of Operation I — Fundamentals of Instructing</p>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+      <div style="display:flex;align-items:center;">
+        <button class="notes-icon-btn" id="notesPanelBtn" onclick="toggleNotesPanel()" title="Plan / Notes">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v3h3" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="7" x2="11" y2="7" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="5" y1="9.5" x2="11" y2="9.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="5" y1="12" x2="8" y2="12" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </button>
+        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit Mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5 2.5L13.5 4.5L5.5 12.5H3.5V10.5L11.5 2.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+            <path d="M2.5 13.5H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="manual-save-btn" onclick="manualSave()" title="Save">✓</button>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-reveal" id="revealHideBtn" onclick="toggleRevealHide()">Reveal All Answers</button>
+    <button class="btn btn-expand" id="expandCollapseBtn" onclick="toggleExpandCollapse()">Expand All Tasks</button>
+    <button class="btn btn-export" onclick="exportAnswers()">Export Answers</button>
+    <label class="btn btn-import">Import Answers<input type="file" accept=".json" onchange="importAnswers(event)" style="display:none;"></label>
+    <div class="more-options-wrap">
+      <button class="btn btn-hide" onclick="toggleLinks()">Links ▾</button>
+      <div class="more-options-menu" id="linksMenu">
+        <div id="linksList"></div>
+        <div class="links-add-row" id="linksAddRow" style="display:none;padding:0.5rem;">
+          <input id="linkTitle" placeholder="Title" style="width:100%;padding:0.4rem 0.6rem;margin-bottom:0.3rem;box-sizing:border-box;background:#2a2a2a;border:1px solid #ffffff;border-radius:4px;color:#fff;font-family:'DM Mono',monospace;font-size:0.62rem;outline:none;">
+          <input id="linkUrl" placeholder="https://..." style="width:100%;padding:0.4rem 0.6rem;margin-bottom:0.4rem;box-sizing:border-box;background:#2a2a2a;border:1px solid #ffffff;border-radius:4px;color:#fff;font-family:'DM Mono',monospace;font-size:0.62rem;outline:none;">
+          <div style="display:flex;gap:0.4rem;">
+            <button onclick="saveNewLink()" style="flex:1;padding:0.35rem;background:#2e8b57;border:none;border-radius:4px;color:#fff;font-family:'DM Mono',monospace;font-size:0.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Save</button>
+            <button onclick="cancelAddLink()" style="flex:1;padding:0.35rem;background:#333;border:none;border-radius:4px;color:#aaa;font-family:'DM Mono',monospace;font-size:0.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Cancel</button>
+          </div>
+        </div>
+        <button onclick="showAddLink()" id="addLinkBtn" style="width:100%;padding:0.55rem 1rem;background:transparent;border:none;border-top:1px solid #333;color:#2e8b57;font-family:'DM Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;text-align:left;box-sizing:border-box;">Add Link</button>
+      </div>
+    </div>
+    <div class="more-options-wrap">
+      <button class="btn btn-hide" onclick="toggleMoreOptions()">More Options ▾</button>
+      <div class="more-options-menu" id="moreOptionsMenu">
+        <button onclick="openChangePw(); toggleMoreOptions()">Change Password</button>
+        <button onclick="clearSaved(); toggleMoreOptions()">Clear All Saved Answers</button>
+      </div>
+    </div>
+    <span id="save-indicator" style="font-family:'DM Mono',monospace;font-size:0.63rem;color:#2e8b57;opacity:0;transition:opacity 0.5s;margin-left:0.25rem;"></span>
+  </div>
+</header>
+
+<div class="bookmark-banner" id="bookmarkBanner" onclick="goToBookmark()">Resume from Bookmark</div>
+
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-panel-header">
+    <h3>Plan / Notes</h3>
+    <button class="notes-panel-close" onclick="toggleNotesPanel()" title="Close">✕</button>
+  </div>
+  <div class="notes-panel-body">
+    <div class="notes-save-indicator" id="notesSaveIndicator">Saved</div>
+    <div class="notes-editor" id="notesEditor" contenteditable="true" data-placeholder="Write your study plan, goals, reminders, or notes here..."></div>
+  </div>
+</div>
+
+<div class="main" id="studyGuide"></div>
+
+<script>
+const data = {
+  area: "Area of Operation I: Fundamentals of Instructing",
+  tasks: [
+    {
+      id: "Task A", title: "Effects of Human Behavior and Communication on the Learning Process",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.A.K1", text: "Elements of human behavior" },
+          { code: "FI.I.A.K1a", text: "a. Definitions of human behavior" },
+          { code: "FI.I.A.K1b", text: "b. Instructor and learner relationship" },
+          { code: "FI.I.A.K1c", text: "c. Motivation" },
+          { code: "FI.I.A.K1d", text: "d. Human needs" },
+          { code: "FI.I.A.K1e", text: "e. Defense mechanisms" },
+          { code: "FI.I.A.K2", text: "Learner emotional reactions" },
+          { code: "FI.I.A.K2a", text: "a. Anxiety and stress" },
+          { code: "FI.I.A.K2b", text: "b. Impatience" },
+          { code: "FI.I.A.K2c", text: "c. Worry or lack of interest" },
+          { code: "FI.I.A.K2d", text: "d. Physical discomfort, illness, fatigue, and dehydration" },
+          { code: "FI.I.A.K2e", text: "e. Apathy due to inadequate instruction" },
+          { code: "FI.I.A.K3", text: "Teaching the adult learner" },
+          { code: "FI.I.A.K4", text: "Effective communication" },
+          { code: "FI.I.A.K4a", text: "a. Basic elements of communication" },
+          { code: "FI.I.A.K4b", text: "b. Barriers to effective communication" },
+          { code: "FI.I.A.K4c", text: "c. Developing communication skills" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.A.R1", text: "Recognizing and accommodating human behavior" },
+          { code: "FI.I.A.R2", text: "Barriers to communication" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.A.S1", text: "Give examples of how human behavior affects motivation and learning" },
+          { code: "FI.I.A.S2", text: "Describe what the instructor can do to deal with:" },
+          { code: "FI.I.A.S2a", text: "a. Serious abnormal emotional behavior" },
+          { code: "FI.I.A.S2b", text: "b. Defense mechanisms" },
+          { code: "FI.I.A.S3", text: "Use effective communication in ground and flight instruction" },
+        ]}
+      ]
+    },
+    {
+      id: "Task B", title: "Learning Process",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.B.K1", text: "Definitions of learning" },
+          { code: "FI.I.B.K2", text: "Learning theory as it applies to ground and flight instruction" },
+          { code: "FI.I.B.K2a", text: "a. Behaviorism" },
+          { code: "FI.I.B.K2b", text: "b. Cognitive Theory" },
+          { code: "FI.I.B.K3", text: "Perceptions and insight" },
+          { code: "FI.I.B.K4", text: "Acquiring knowledge" },
+          { code: "FI.I.B.K5", text: "Laws of learning" },
+          { code: "FI.I.B.K6", text: "Domains of learning" },
+          { code: "FI.I.B.K6a", text: "a. Cognitive" },
+          { code: "FI.I.B.K6b", text: "b. Affective" },
+          { code: "FI.I.B.K6c", text: "c. Psychomotor" },
+          { code: "FI.I.B.K7", text: "Characteristics of learning" },
+          { code: "FI.I.B.K8", text: "Scenario-based training (SBT)" },
+          { code: "FI.I.B.K9", text: "Acquiring skill knowledge" },
+          { code: "FI.I.B.K9a", text: "a. Stages" },
+          { code: "FI.I.B.K9b", text: "b. Knowledge of results" },
+          { code: "FI.I.B.K9c", text: "c. How to develop skills" },
+          { code: "FI.I.B.K9d", text: "d. Learning plateaus" },
+          { code: "FI.I.B.K10", text: "Types of practice" },
+          { code: "FI.I.B.K11", text: "Evaluation versus critique" },
+          { code: "FI.I.B.K12", text: "Distractions, interruptions, fixation, and inattention" },
+          { code: "FI.I.B.K13", text: "Errors" },
+          { code: "FI.I.B.K14", text: "Memory" },
+          { code: "FI.I.B.K14a", text: "a. Sensory" },
+          { code: "FI.I.B.K14b", text: "b. Short-Term Memory (STM) and Long-Term Memory (LTM)" },
+          { code: "FI.I.B.K14c", text: "c. How usage affects memory" },
+          { code: "FI.I.B.K14d", text: "d. Forgetting" },
+          { code: "FI.I.B.K15", text: "Retention of learning" },
+          { code: "FI.I.B.K16", text: "Transfer of learning" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.B.R1", text: "Inadequate or incomplete instruction" },
+          { code: "FI.I.B.R2", text: "Lack of learner motivation" },
+          { code: "FI.I.B.R3", text: "Recognizing and correcting learner errors" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.B.S1", text: "Apply educational theories to ground and flight instruction" },
+          { code: "FI.I.B.S2", text: "Recognize and correct conditions that undermine the learning process" },
+          { code: "FI.I.B.S3", text: "Plan for and use techniques, including realistic distractions that teach flight students how to manage a workload" },
+        ]}
+      ]
+    },
+    {
+      id: "Task C", title: "Course Development, Lesson Plans, and Classroom Training Techniques",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.C.K1", text: "Teaching" },
+          { code: "FI.I.C.K1a", text: "a. Process" },
+          { code: "FI.I.C.K1b", text: "b. Essential skills" },
+          { code: "FI.I.C.K2", text: "Course of training" },
+          { code: "FI.I.C.K3", text: "Preparation of a lesson" },
+          { code: "FI.I.C.K3a", text: "a. Training objectives and completion standards" },
+          { code: "FI.I.C.K3b", text: "b. Performance-based objectives" },
+          { code: "FI.I.C.K3c", text: "c. Importance of ACS in aviation training curricula" },
+          { code: "FI.I.C.K3d", text: "d. Decision-based objectives" },
+          { code: "FI.I.C.K4", text: "Organization of material" },
+          { code: "FI.I.C.K5", text: "Training delivery methods" },
+          { code: "FI.I.C.K5a", text: "a. Lecture" },
+          { code: "FI.I.C.K5b", text: "b. Discussion" },
+          { code: "FI.I.C.K5c", text: "c. Guided discussion" },
+          { code: "FI.I.C.K5d", text: "d. Cooperative or group learning" },
+          { code: "FI.I.C.K5e", text: "e. Demonstration-performance" },
+          { code: "FI.I.C.K5f", text: "f. Drill and practice" },
+          { code: "FI.I.C.K6", text: "Electronic learning (e-Learning)" },
+          { code: "FI.I.C.K7", text: "Instructional aids and training technologies" },
+          { code: "FI.I.C.K7a", text: "a. Characteristics of effective instructional aids" },
+          { code: "FI.I.C.K7b", text: "b. Reasons for use" },
+          { code: "FI.I.C.K7c", text: "c. Guidelines for use" },
+          { code: "FI.I.C.K7d", text: "d. Types" },
+          { code: "FI.I.C.K8", text: "Integrated flight instruction" },
+          { code: "FI.I.C.K9", text: "Problem-based instruction" },
+          { code: "FI.I.C.K10", text: "Planning instructional activity" },
+          { code: "FI.I.C.K10a", text: "a. Blocks of learning" },
+          { code: "FI.I.C.K10b", text: "b. Training syllabus" },
+          { code: "FI.I.C.K10c", text: "c. Lesson plans" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.C.R1", text: "Selection of teaching methods" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.C.S1", text: "Prepare an instructional lesson plan" },
+          { code: "FI.I.C.S1a", text: "a. Aeronautical knowledge ground lesson applicable for a classroom" },
+          { code: "FI.I.C.S1b", text: "b. Maneuver introduction and ground lesson" },
+        ]}
+      ]
+    },
+    {
+      id: "Task D", title: "Student Evaluation, Assessment, and Testing",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.D.K1", text: "Purpose and characteristics of effective assessment" },
+          { code: "FI.I.D.K2", text: "Traditional assessments" },
+          { code: "FI.I.D.K3", text: "Authentic assessments" },
+          { code: "FI.I.D.K3a", text: "a. Learner-centered assessment" },
+          { code: "FI.I.D.K3b", text: "b. Maneuver or procedure grades" },
+          { code: "FI.I.D.K3c", text: "c. Assessing risk management skills" },
+          { code: "FI.I.D.K4", text: "Choosing an effective assessment method" },
+          { code: "FI.I.D.K5", text: "Purposes and types of critiques" },
+          { code: "FI.I.D.K6", text: "Oral assessment" },
+          { code: "FI.I.D.K6a", text: "a. Characteristics of effective questions" },
+          { code: "FI.I.D.K6b", text: "b. Types of questions to avoid" },
+          { code: "FI.I.D.K6c", text: "c. Answering learner questions" },
+          { code: "FI.I.D.K7", text: "Assessment of piloting ability" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.D.R1", text: "Delivering an assessment" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.D.S1", text: "Use appropriate methods and techniques to assess learner performance in ground or flight training" },
+        ]}
+      ]
+    },
+    {
+      id: "Task E", title: "Elements of Effective Teaching in a Professional Environment",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.E.K1", text: "Aviation instructor responsibilities" },
+          { code: "FI.I.E.K1a", text: "a. Helping learners" },
+          { code: "FI.I.E.K1b", text: "b. Providing adequate instruction" },
+          { code: "FI.I.E.K1c", text: "c. Training to established standards of performance" },
+          { code: "FI.I.E.K1d", text: "d. Emphasizing the positive" },
+          { code: "FI.I.E.K1e", text: "e. Minimizing learner frustrations" },
+          { code: "FI.I.E.K2", text: "Flight instructor responsibilities, including supervision and surveillance during training" },
+          { code: "FI.I.E.K3", text: "Flight instructor qualifications and professionalism" },
+          { code: "FI.I.E.K4", text: "Professional development" },
+          { code: "FI.I.E.K5", text: "Instructor ethics and conduct" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.E.R1", text: "Fulfilling instructor responsibilities" },
+          { code: "FI.I.E.R2", text: "Exhibiting professionalism" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.E.S1", text: "Deliver ground or flight instruction on an evaluator-assigned Task in a manner consistent with instructor responsibilities and professional characteristics" },
+        ]}
+      ]
+    },
+    {
+      id: "Task F", title: "Elements of Effective Teaching that Include Risk Management and Accident Prevention",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.F.K1", text: "Teaching risk identification, assessment, and mitigation" },
+          { code: "FI.I.F.K2", text: "Teaching risk management tools" },
+          { code: "FI.I.F.K2a", text: "a. PAVE checklist (Pilot/Aircraft/enVironment/External Pressures)" },
+          { code: "FI.I.F.K2b", text: "b. Flight Risk Assessment Tools (FRATs)" },
+          { code: "FI.I.F.K3", text: "When and how to introduce risk management" },
+          { code: "FI.I.F.K4", text: "Risk management teaching techniques by phase of instruction" },
+          { code: "FI.I.F.K5", text: "Managing risk during flight instruction" },
+          { code: "FI.I.F.K5a", text: "a. Common flight instruction risks" },
+          { code: "FI.I.F.K5b", text: "b. Best practices" },
+          { code: "FI.I.F.K5c", text: "c. Special considerations while teaching takeoffs and landings" },
+          { code: "FI.I.F.K6", text: "Aeronautical Decision-Making (ADM) including CRM/SRM" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.F.R1", text: "Hazards associated with providing flight instruction" },
+          { code: "FI.I.F.R2", text: "Obstacles to maintaining situational awareness during flight instruction" },
+          { code: "FI.I.F.R3", text: "Recognizing and managing hazards arising from human behavior, including hazardous attitudes" },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.F.S1", text: "Use SBT to demonstrate, teach, and assess risk management and ADM skills" },
+          { code: "FI.I.F.S2", text: "Identify, assess, and mitigate risks commonly associated with flight instruction" },
+          { code: "FI.I.F.S2a", text: "a. Awareness and oversight of the learner's actions, with timely supervision/intervention" },
+          { code: "FI.I.F.S2b", text: "b. Awareness of the learner's cognitive/physiological state, mitigating anxiety/fatigue" },
+          { code: "FI.I.F.S2c", text: "c. Overall situational awareness of aircraft state, position, and vigilance for unexpected events" },
+          { code: "FI.I.F.S3", text: "Model and teach safety practices" },
+          { code: "FI.I.F.S3a", text: "a. Collision avoidance while simultaneously providing instruction" },
+          { code: "FI.I.F.S3b", text: "b. Avoidance of unnecessary distractions" },
+          { code: "FI.I.F.S3c", text: "c. Coordinated flight" },
+          { code: "FI.I.F.S3d", text: "d. Awareness of who is manipulating controls through positive exchange of flight controls" },
+          { code: "FI.I.F.S3e", text: "e. Continuous awareness of the aircraft's dynamic state and position in the NAS" },
+        ]}
+      ]
+    }
+  ]
+};
+
+// ── Formatting ────────────────────────────────────────────────────
+function formatDoc(cmd) {
+  document.execCommand(cmd, false, null);
+}
+
+// ── Image insertion ───────────────────────────────────────────────
+function insertImageInEditor(editor, src) {
+  editor.focus();
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:100%;height:auto;display:block;margin:0.4rem 0;border-radius:3px;';
+  img.contentEditable = 'false';
+  const sel = window.getSelection();
+  if (sel && sel.rangeCount) {
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(img);
+    range.setStartAfter(img);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else {
+    editor.appendChild(img);
+  }
+  localStorage.setItem('cfi_' + editor.id, editor.innerHTML);
+  showSaveIndicator();
+}
+
+// ── Build editor block ────────────────────────────────────────────
+function buildEditorBlock(id, editorClass, placeholder, outerClass) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'editor-outer is-hidden-state ' + outerClass;
+
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'reveal-overlay';
+  overlay.id = id + '_overlay';
+  overlay.innerHTML = '<span>Click Reveal to show</span>';
+  wrapper.appendChild(overlay);
+
+  // Toolbar
+  const toolbar = document.createElement('div');
+  toolbar.className = 'editor-toolbar';
+
+  const imgInput = document.createElement('input');
+  imgInput.type = 'file';
+  imgInput.accept = 'image/*';
+  imgInput.style.display = 'none';
+  imgInput.addEventListener('change', () => {
+    const file = imgInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => insertImageInEditor(editor, e.target.result);
+    reader.readAsDataURL(file);
+    imgInput.value = '';
+  });
+
+  toolbar.innerHTML = `
+    <button class="tb-bold" onmousedown="event.preventDefault(); formatDoc('bold')" title="Bold">B</button>
+    <button class="tb-italic" onmousedown="event.preventDefault(); formatDoc('italic')" title="Italic">I</button>
+    <button class="tb-underline" onmousedown="event.preventDefault(); formatDoc('underline')" title="Underline">U</button>
+    <span style="width:1px;background:var(--border);margin:0.1rem 0.2rem;align-self:stretch;"></span>
+    <button class="tb-undo" onmousedown="event.preventDefault(); formatDoc('undo')" title="Undo">↩</button>
+    <button class="tb-redo" onmousedown="event.preventDefault(); formatDoc('redo')" title="Redo">↪</button>
+    <span style="width:1px;background:var(--border);margin:0.1rem 0.2rem;align-self:stretch;"></span>
+  `;
+
+  const imgBtn = document.createElement('button');
+  imgBtn.title = 'Insert Image';
+  imgBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="4.5" cy="5.5" r="1" fill="currentColor"/><path d="M1 9.5L4 6.5L6.5 9L9 7L13 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  imgBtn.onmousedown = (e) => { e.preventDefault(); editor.focus(); imgInput.click(); };
+  toolbar.appendChild(imgBtn);
+  toolbar.appendChild(imgInput);
+  wrapper.appendChild(toolbar);
+
+  // Editor
+  const editor = document.createElement('div');
+  editor.className = 'rich-editor ' + editorClass;
+  editor.id = id;
+  editor.contentEditable = 'true';
+  editor.setAttribute('data-placeholder', placeholder);
+  editor.addEventListener('input', () => {
+    localStorage.setItem('cfi_' + id, editor.innerHTML);
+    showSaveIndicator();
+  });
+
+  editor.addEventListener('paste', (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        const reader = new FileReader();
+        reader.onload = (ev) => insertImageInEditor(editor, ev.target.result);
+        reader.readAsDataURL(file);
+        return;
+      }
+    }
+  });
+  wrapper.appendChild(editor);
+
+  return wrapper;
+}
+
+// ── Build guide ───────────────────────────────────────────────────
+function buildGuide() {
+  const container = document.getElementById('studyGuide');
+  const areaDiv = document.createElement('div');
+  areaDiv.className = 'area';
+
+  const areaHeader = document.createElement('div');
+  areaHeader.className = 'area-header collapsed';
+  areaHeader.innerHTML = `<h2>${data.area}</h2><span class="chevron">▼</span>`;
+  areaHeader.onclick = () => {
+    areaBody.classList.toggle('hidden');
+    areaHeader.classList.toggle('collapsed');
+  };
+  areaDiv.appendChild(areaHeader);
+
+  const areaBody = document.createElement('div');
+  areaBody.className = 'area-body hidden';
+
+  data.tasks.forEach(task => {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task';
+
+    const taskHeader = document.createElement('div');
+    taskHeader.className = 'task-header';
+    taskHeader.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><div><span class="task-ref">${task.id}.</span>${task.title}<br><small style="color:#8a9bb0;font-weight:400;font-size:0.65rem;margin-top:0.2rem;display:block">Refs: ${task.refs}</small></div><span class="task-chevron" style="color:var(--accent);font-size:1rem;transition:transform 0.3s;flex-shrink:0;margin-left:1rem;transform:rotate(-90deg);">▾</span></div>`;
+    const taskBody = document.createElement('div');
+    taskBody.className = 'task-body hidden';
+    taskHeader.onclick = () => {
+      taskBody.classList.toggle('hidden');
+      const chevron = taskHeader.querySelector('.task-chevron');
+      chevron.style.transform = taskBody.classList.contains('hidden') ? 'rotate(-90deg)' : 'rotate(0deg)';
+    };
+    taskDiv.appendChild(taskHeader);
+
+    task.sections.forEach(section => {
+      const sectionLabel = document.createElement('div');
+      sectionLabel.className = 'section-label';
+      sectionLabel.innerHTML = `${section.label} <span class="section-chevron">▾</span>`;
+      sectionLabel.style.cursor = 'pointer';
+      sectionLabel.style.userSelect = 'none';
+      sectionLabel.style.display = 'flex';
+      sectionLabel.style.alignItems = 'center';
+      sectionLabel.style.justifyContent = 'space-between';
+      sectionLabel.style.width = '100%';
+      sectionLabel.style.borderBottom = '2px solid #111';
+      sectionLabel.style.paddingBottom = '0.3rem';
+      sectionLabel.style.marginBottom = '0.6rem';
+
+      const sectionBody = document.createElement('div');
+      sectionBody.className = 'section-body hidden';
+
+      sectionLabel.onclick = () => {
+        sectionBody.classList.toggle('hidden');
+        sectionLabel.querySelector('.section-chevron').textContent =
+          sectionBody.classList.contains('hidden') ? '▸' : '▾';
+      };
+
+      // Set chevron to collapsed state by default
+      sectionLabel.querySelector('.section-chevron').textContent = '▸';
+
+      taskBody.appendChild(sectionLabel);
+
+      section.items.forEach(item => {
+        const safeCode = item.code.replace(/\./g, '_');
+        const ansId = safeCode + '_ans';
+        const sumId = safeCode + '_sum';
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+
+        const codeDiv = document.createElement('div');
+        codeDiv.className = 'item-code';
+        codeDiv.textContent = item.code;
+        codeDiv.title = 'Click to bookmark';
+        codeDiv.onclick = () => setBookmark(item.code);
+
+        itemDiv.appendChild(codeDiv);
+
+        const fieldsDiv = document.createElement('div');
+        fieldsDiv.className = 'item-fields';
+
+        const titleRow = document.createElement('div');
+        titleRow.className = 'item-title-row';
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'item-title';
+        titleDiv.textContent = item.text;
+
+        // Confidence dots
+        const confKey = 'cfi_conf_' + safeCode;
+        const savedConf = localStorage.getItem(confKey);
+
+        const dotsRow = document.createElement('div');
+        dotsRow.className = 'conf-dots-row';
+
+        ['green', 'yellow', 'red'].forEach(color => {
+          const dot = document.createElement('button');
+          dot.className = 'conf-dot ' + color;
+          dot.title = color === 'green' ? 'Know it well' : color === 'yellow' ? 'Needs more work' : 'Don\'t know it';
+          if (savedConf === color) {
+            dot.classList.add('active');
+            titleDiv.classList.add('conf-' + color);
+          }
+          dot.onclick = (e) => {
+            e.stopPropagation();
+            const isActive = dot.classList.contains('active');
+            dotsRow.querySelectorAll('.conf-dot').forEach(d => d.classList.remove('active'));
+            titleDiv.classList.remove('conf-green', 'conf-yellow', 'conf-red');
+            if (isActive) {
+              localStorage.removeItem(confKey);
+            } else {
+              dot.classList.add('active');
+              titleDiv.classList.add('conf-' + color);
+              localStorage.setItem(confKey, color);
+            }
+          };
+          dotsRow.appendChild(dot);
+        });
+
+        titleRow.appendChild(titleDiv);
+        titleRow.appendChild(dotsRow);
+        fieldsDiv.appendChild(titleRow);
+
+        // Answer field
+        const ansRow = document.createElement('div');
+        ansRow.className = 'field-row';
+        const ansLabelRow = document.createElement('div');
+        ansLabelRow.className = 'field-label-row';
+        const ansLabel = document.createElement('div');
+        ansLabel.className = 'field-label';
+        ansLabel.textContent = 'Answer';
+        const ansBtn = document.createElement('button');
+        ansBtn.className = 'side-toggle-btn';
+        ansBtn.id = ansId + '_overlay_btn';
+        ansBtn.textContent = 'Reveal';
+        ansBtn.onclick = () => toggleField(ansId + '_overlay');
+        ansLabelRow.appendChild(ansLabel);
+        ansLabelRow.appendChild(ansBtn);
+        const ansToggleRow = document.createElement('div');
+        ansToggleRow.className = 'field-with-toggle';
+        ansToggleRow.appendChild(buildEditorBlock(ansId, '', 'Type your answer here...', 'answer-type'));
+        ansRow.appendChild(ansLabelRow);
+        ansRow.appendChild(ansToggleRow);
+        fieldsDiv.appendChild(ansRow);
+
+        // Summary field
+        const sumRow = document.createElement('div');
+        sumRow.className = 'field-row';
+        const sumLabelRow = document.createElement('div');
+        sumLabelRow.className = 'field-label-row';
+        const sumLabel = document.createElement('div');
+        sumLabel.className = 'field-label';
+        sumLabel.textContent = 'Summary/Notes';
+        const sumBtn = document.createElement('button');
+        sumBtn.className = 'side-toggle-btn';
+        sumBtn.id = sumId + '_overlay_btn';
+        sumBtn.textContent = 'Reveal';
+        sumBtn.onclick = () => toggleField(sumId + '_overlay');
+        sumLabelRow.appendChild(sumLabel);
+        sumLabelRow.appendChild(sumBtn);
+        const sumToggleRow = document.createElement('div');
+        sumToggleRow.className = 'field-with-toggle';
+        sumToggleRow.appendChild(buildEditorBlock(sumId, 'summary-editor', 'Brief summary or key concept...', 'summary-type'));
+        sumRow.appendChild(sumLabelRow);
+        sumRow.appendChild(sumToggleRow);
+        fieldsDiv.appendChild(sumRow);
+
+        itemDiv.appendChild(codeDiv);
+        itemDiv.appendChild(fieldsDiv);
+        sectionBody.appendChild(itemDiv);
+      });
+
+      taskBody.appendChild(sectionBody);
+    });
+
+    taskDiv.appendChild(taskBody);
+
+    // Task overall summary — sits outside taskBody so always visible
+    const taskSafeId = task.id.replace(' ', '_');
+    const taskSumId = 'tasksummary_' + taskSafeId;
+    const taskSumSection = document.createElement('div');
+    taskSumSection.className = 'task-summary-section';
+    const taskSumLabel = document.createElement('div');
+    taskSumLabel.className = 'task-summary-label';
+    taskSumLabel.textContent = task.id + ' — ' + task.title + ' — Overall Summary';
+    taskSumSection.appendChild(taskSumLabel);
+    const taskSumLabelRow = document.createElement('div');
+    taskSumLabelRow.className = 'field-label-row';
+    const taskSumInnerLabel = document.createElement('div');
+    taskSumInnerLabel.className = 'field-label';
+    taskSumInnerLabel.textContent = 'Overall Summary';
+    const taskSumBtn = document.createElement('button');
+    taskSumBtn.className = 'side-toggle-btn';
+    taskSumBtn.id = taskSumId + '_overlay_btn';
+    taskSumBtn.textContent = 'Reveal';
+    taskSumBtn.onclick = () => toggleField(taskSumId + '_overlay');
+    taskSumLabelRow.appendChild(taskSumInnerLabel);
+    taskSumLabelRow.appendChild(taskSumBtn);
+    const taskSumToggleRow = document.createElement('div');
+    taskSumToggleRow.className = 'field-with-toggle';
+    taskSumToggleRow.appendChild(buildEditorBlock(taskSumId, 'task-summary-editor', 'Your overall summary of ' + task.id + '...', 'task-summary-type'));
+    taskSumSection.appendChild(taskSumLabelRow);
+    taskSumSection.appendChild(taskSumToggleRow);
+    taskDiv.appendChild(taskSumSection);
+
+    areaBody.appendChild(taskDiv);
+  });
+
+  areaDiv.appendChild(areaBody);
+  container.appendChild(areaDiv);
+}
+
+// ── Toggle reveal ─────────────────────────────────────────────────
+function toggleField(overlayId) {
+  const overlay = document.getElementById(overlayId);
+  const btn = document.getElementById(overlayId + '_btn');
+  if (!overlay) return;
+  const editorOuter = overlay.closest('.editor-outer');
+  const isRevealed = overlay.classList.contains('hidden-overlay');
+  if (isRevealed) {
+    // Currently revealed (overlay hidden) → hide it
+    overlay.classList.remove('hidden-overlay');
+    if (editorOuter) {
+      editorOuter.classList.add('is-hidden-state');
+      const editor = editorOuter.querySelector('.rich-editor');
+      if (editor) { editor.contentEditable = 'false'; editor.style.cursor = 'default'; }
+    }
+    if (btn) { btn.textContent = 'Reveal'; btn.classList.remove('is-hidden'); }
+  } else {
+    // Currently hidden (overlay showing) → reveal it
+    overlay.classList.add('hidden-overlay');
+    if (editorOuter) {
+      editorOuter.classList.remove('is-hidden-state');
+      const editor = editorOuter.querySelector('.rich-editor');
+      if (editor) {
+        editor.contentEditable = 'false';
+        editor.style.cursor = 'default';
+        editor.addEventListener('click', function enableEdit() {
+          editor.contentEditable = 'true';
+          editor.style.cursor = '';
+          editor.focus();
+          editor.removeEventListener('click', enableEdit);
+        });
+      }
+    }
+    if (btn) { btn.textContent = 'Hide'; btn.classList.add('is-hidden'); }
+  }
+}
+
+let answersRevealed = false;
+
+function toggleRevealHide() {
+  const btn = document.getElementById('revealHideBtn');
+  if (!answersRevealed) {
+    document.querySelectorAll('.reveal-overlay').forEach(el => el.classList.add('hidden-overlay'));
+    document.querySelectorAll('.editor-outer').forEach(el => {
+      el.classList.remove('is-hidden-state');
+      const editor = el.querySelector('.rich-editor');
+      if (editor) {
+        editor.contentEditable = 'false';
+        editor.style.cursor = 'default';
+        editor.addEventListener('click', function enableEdit() {
+          editor.contentEditable = 'true';
+          editor.style.cursor = '';
+          editor.focus();
+          editor.removeEventListener('click', enableEdit);
+        });
+      }
+    });
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Hide'; b.classList.add('is-hidden'); });
+    btn.textContent = 'Hide All Answers';
+    btn.classList.remove('btn-reveal');
+    btn.classList.add('btn-hide-all');
+    answersRevealed = true;
+  } else {
+    document.querySelectorAll('.reveal-overlay').forEach(el => el.classList.remove('hidden-overlay'));
+    document.querySelectorAll('.editor-outer').forEach(el => el.classList.add('is-hidden-state'));
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Reveal'; b.classList.remove('is-hidden'); });
+    btn.textContent = 'Reveal All Answers';
+    btn.classList.remove('btn-hide-all');
+    btn.classList.add('btn-reveal');
+    answersRevealed = false;
+  }
+}
+
+let tasksExpanded = false;
+
+function toggleExpandCollapse() {
+  const btn = document.getElementById('expandCollapseBtn');
+  if (!tasksExpanded) {
+    document.querySelectorAll('.area-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.area-header').forEach(el => el.classList.remove('collapsed'));
+    document.querySelectorAll('.task-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(0deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▾');
+    btn.textContent = 'Collapse All Tasks';
+    tasksExpanded = true;
+  } else {
+    document.querySelectorAll('.task-body').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(-90deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▸');
+    btn.textContent = 'Expand All Tasks';
+    tasksExpanded = false;
+  }
+}
+
+// ── Save / Load ───────────────────────────────────────────────────
+function loadAll() {
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    const saved = localStorage.getItem('cfi_' + el.id);
+    if (saved !== null) el.innerHTML = saved;
+  });
+}
+
+function showSaveIndicator() {
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '💾 Saving...';
+  ind.style.opacity = '1';
+  clearTimeout(ind._timer);
+  ind._timer = setTimeout(() => {
+    ind.textContent = '✓ Saved';
+    setTimeout(() => { ind.style.opacity = '0'; }, 1500);
+  }, 500);
+}
+
+// ── Export / Import ───────────────────────────────────────────────
+function exportAnswers() {
+  const data = { answers: {}, confidence: {}, bookmark: null, links: null };
+
+  // Answers
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    if (el.id && el.innerHTML.trim()) data.answers[el.id] = el.innerHTML;
+  });
+
+  // Confidence ratings
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('cfi_conf_')) data.confidence[k] = localStorage.getItem(k);
+  });
+
+  // Bookmark
+  const bookmark = localStorage.getItem('cfi_bookmark');
+  if (bookmark) data.bookmark = bookmark;
+
+  // Custom links
+  const links = localStorage.getItem('cfi_links');
+  if (links) data.links = JSON.parse(links);
+
+  // Notes
+  const notes = localStorage.getItem('cfi_notes');
+  if (notes) data.notes = notes;
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cfi_acs_progress.json'; a.click();
+  URL.revokeObjectURL(url);
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '✓ Exported!'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2000);
+}
+
+function importAnswers(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Support old format (flat object of answers)
+      const answers = data.answers || data;
+      const confidence = data.confidence || {};
+      const bookmark = data.bookmark || null;
+      const links = data.links || null;
+
+      // Restore answers
+      Object.entries(answers).forEach(([id, html]) => {
+        const el = document.getElementById(id);
+        if (el) { el.innerHTML = html; localStorage.setItem('cfi_' + id, html); }
+      });
+
+      // Restore confidence ratings
+      Object.entries(confidence).forEach(([k, v]) => {
+        localStorage.setItem(k, v);
+      });
+      // Re-apply confidence UI
+      document.querySelectorAll('.conf-dot').forEach(dot => {
+        const item = dot.closest('.item');
+        if (!item) return;
+        const codeEl = item.querySelector('.item-code');
+        if (!codeEl) return;
+        const safeCode = codeEl.textContent.trim().replace(/\./g, '_');
+        const confKey = 'cfi_conf_' + safeCode;
+        const saved = localStorage.getItem(confKey);
+        const titleDiv = item.querySelector('.item-title');
+        if (saved && dot.classList.contains(saved)) {
+          dot.classList.add('active');
+          if (titleDiv) titleDiv.classList.add('conf-' + saved);
+        }
+      });
+
+      // Restore bookmark
+      if (bookmark) {
+        localStorage.setItem('cfi_bookmark', bookmark);
+        document.getElementById('bookmarkBanner').classList.add('visible');
+        applyBookmarkUI(bookmark);
+      }
+
+      // Restore links
+      if (links) {
+        localStorage.setItem('cfi_links', JSON.stringify(links));
+      }
+
+      // Restore notes
+      if (data.notes) {
+        localStorage.setItem('cfi_notes', data.notes);
+        const notesEditor = document.getElementById('notesEditor');
+        if (notesEditor) notesEditor.innerHTML = data.notes;
+      }
+
+      const ind = document.getElementById('save-indicator');
+      ind.textContent = '✓ Imported & Saved!'; ind.style.opacity = '1';
+      setTimeout(() => { ind.style.opacity = '0'; }, 2500);
+    } catch(err) {
+      alert('Could not read that file. Make sure it\'s a valid CFI ACS progress export.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearSaved() {
+  if (!confirm('Are you sure you want to clear ALL saved answers? This cannot be undone.')) return;
+  if (!confirm('This is your final warning — all answers will be permanently deleted. Are you absolutely sure?')) return;
+  Object.keys(localStorage).forEach(k => { if (k.startsWith('cfi_')) localStorage.removeItem(k); });
+  document.querySelectorAll('.rich-editor').forEach(el => el.innerHTML = '');
+  document.querySelectorAll('.conf-dot').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.item-title').forEach(t => t.classList.remove('conf-green', 'conf-yellow', 'conf-red'));
+  document.querySelectorAll('.item-code').forEach(el => el.classList.remove('bookmarked'));
+  document.querySelectorAll('.item').forEach(el => el.classList.remove('is-bookmarked'));
+  document.querySelectorAll('.area-header, .task-header').forEach(h => h.classList.remove('bookmark-highlight'));
+  document.getElementById('bookmarkBanner').classList.remove('visible');
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '🗑 Cleared'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2000);
+}
+
+function manualSave() {
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    if (el.id) localStorage.setItem('cfi_' + el.id, el.innerHTML);
+  });
+  const btn = document.querySelector('.manual-save-btn');
+  btn.style.background = '#1a5c38';
+  btn.textContent = '✓';
+  showSaveIndicator();
+  setTimeout(() => { btn.style.background = '#2e8b57'; }, 1000);
+}
+
+// ── Links management ──────────────────────────────────────────────
+const DEFAULT_LINKS = [
+  { title: "Aviation Instructor's Handbook", url: "https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/aviation_instructors_handbook/aviation_instructors_handbook.pdf" },
+  { title: "Pilot's Handbook of Aeronautical Knowledge", url: "https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/faa-h-8083-25c.pdf" },
+  { title: "CFI ACS", url: "https://www.faa.gov/training_testing/testing/acs/cfi_airplane_acs_25.pdf" }
+];
+
+function getLinks() {
+  const saved = localStorage.getItem('cfi_links');
+  return saved ? JSON.parse(saved) : DEFAULT_LINKS;
+}
+
+function saveLinks(links) {
+  localStorage.setItem('cfi_links', JSON.stringify(links));
+}
+
+let linksEditMode = false;
+
+function renderLinks() {
+  const list = document.getElementById('linksList');
+  const links = getLinks();
+  list.innerHTML = '';
+
+  links.forEach((link, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;';
+
+    const a = document.createElement('a');
+    a.href = link.url;
+    a.target = '_blank';
+    a.textContent = link.title;
+    a.style.cssText = 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0.6rem 1rem;';
+
+    if (linksEditMode) {
+      const del = document.createElement('button');
+      del.textContent = 'Remove';
+      del.title = 'Remove';
+      del.style.cssText = 'display:block;width:100%;background:transparent;border:none;border-bottom:1px solid #2a2a2a;color:#ff6b6b;font-size:0.58rem;font-family:"DM Mono",monospace;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;padding:0.25rem 1rem 0.4rem;text-align:left;';
+      del.onclick = (e) => {
+        e.stopPropagation();
+        if (!confirm(`Remove "${link.title}"?`)) return;
+        const links = getLinks();
+        links.splice(i, 1);
+        saveLinks(links);
+        renderLinks();
+      };
+      row.style.cssText = 'display:flex;flex-direction:column;border-bottom:1px solid #2a2a2a;';
+      a.style.cssText = 'padding:0.6rem 1rem 0.2rem;white-space:normal;word-break:break-word;';
+      row.appendChild(a);
+      row.appendChild(del);
+    } else {
+      row.style.cssText = 'display:flex;align-items:center;';
+      row.appendChild(a);
+    }
+
+    list.appendChild(row);
+  });
+
+  // Edit toggle button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = linksEditMode ? 'Done Editing' : 'Edit Links';
+  editBtn.style.cssText = 'width:100%;padding:0.5rem 1rem;background:transparent;border:none;border-top:1px solid #333;color:#d95f1a;font-family:"DM Mono",monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;text-align:left;box-sizing:border-box;';
+  editBtn.onclick = (e) => {
+    e.stopPropagation();
+    linksEditMode = !linksEditMode;
+    renderLinks();
+  };
+  list.appendChild(editBtn);
+}
+
+function showAddLink() {
+  document.getElementById('linksAddRow').style.display = 'block';
+  document.getElementById('addLinkBtn').style.display = 'none';
+  document.getElementById('linkTitle').focus();
+}
+
+function cancelAddLink() {
+  document.getElementById('linksAddRow').style.display = 'none';
+  document.getElementById('addLinkBtn').style.display = 'block';
+  document.getElementById('linkTitle').value = '';
+  document.getElementById('linkUrl').value = '';
+}
+
+function saveNewLink() {
+  const title = document.getElementById('linkTitle').value.trim();
+  const url = document.getElementById('linkUrl').value.trim();
+  if (!title || !url) { alert('Please enter both a title and a URL.'); return; }
+  const links = getLinks();
+  links.push({ title, url });
+  saveLinks(links);
+  renderLinks();
+  cancelAddLink();
+}
+
+function toggleLinks() {
+  const menu = document.getElementById('linksMenu');
+  menu.classList.toggle('open');
+  if (menu.classList.contains('open')) {
+    linksEditMode = false;
+    renderLinks();
+  }
+}
+
+function toggleMoreOptions() {
+  const menu = document.getElementById('moreOptionsMenu');
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.more-options-wrap').forEach(wrap => {
+    if (!wrap.contains(e.target)) {
+      wrap.querySelectorAll('.more-options-menu').forEach(m => m.classList.remove('open'));
+    }
+  });
+});
+
+// ── Edit Mode ─────────────────────────────────────────────────────
+let editModeActive = false;
+
+function toggleEditMode() {
+  const btn = document.getElementById('editModeBtn');
+  editModeActive = !editModeActive;
+
+  if (editModeActive) {
+    // Enter edit mode: expand all, reveal all, swap icon to dots
+    btn.classList.add('active');
+    btn.title = 'Exit Edit Mode (saves changes)';
+    btn.innerHTML = `<span style="font-size:1.1rem;font-weight:700;letter-spacing:0.05em;line-height:1;">···</span>`;
+
+    // Expand all
+    document.querySelectorAll('.area-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.area-header').forEach(el => el.classList.remove('collapsed'));
+    document.querySelectorAll('.task-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(0deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▾');
+    tasksExpanded = true;
+    const expandBtn = document.getElementById('expandCollapseBtn');
+    if (expandBtn) expandBtn.textContent = 'Collapse All Tasks';
+
+    // Reveal all
+    document.querySelectorAll('.reveal-overlay').forEach(el => el.classList.add('hidden-overlay'));
+    document.querySelectorAll('.editor-outer').forEach(el => el.classList.remove('is-hidden-state'));
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Hide'; b.classList.add('is-hidden'); });
+    answersRevealed = true;
+    const revealBtn = document.getElementById('revealHideBtn');
+    if (revealBtn) { revealBtn.textContent = 'Hide All Answers'; revealBtn.classList.remove('btn-reveal'); revealBtn.classList.add('btn-hide-all'); }
+
+  } else {
+    // Exit edit mode: save all, lock editors, restore pencil icon
+    btn.classList.remove('active');
+    btn.title = 'Edit Mode';
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 2.5L13.5 4.5L5.5 12.5H3.5V10.5L11.5 2.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M2.5 13.5H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+
+    // Save all
+    document.querySelectorAll('.rich-editor').forEach(el => {
+      if (el.id) localStorage.setItem('cfi_' + el.id, el.innerHTML);
+    });
+    showSaveIndicator();
+
+    // Lock all visible editors to read-only until clicked
+    document.querySelectorAll('.editor-outer:not(.is-hidden-state) .rich-editor').forEach(editor => {
+      editor.contentEditable = 'false';
+      editor.style.cursor = 'default';
+      editor.addEventListener('click', function enableEdit() {
+        editor.contentEditable = 'true';
+        editor.style.cursor = '';
+        editor.focus();
+        editor.removeEventListener('click', enableEdit);
+      });
+    });
+  }
+}
+
+
+// ── Bookmark ──────────────────────────────────────────────────────
+function setBookmark(code) {
+  const existing = localStorage.getItem('cfi_bookmark');
+
+  // Clear all highlights
+  document.querySelectorAll('.item-code').forEach(el => el.classList.remove('bookmarked'));
+  document.querySelectorAll('.item').forEach(el => el.classList.remove('is-bookmarked'));
+  document.querySelectorAll('.area-header').forEach(h => h.classList.remove('bookmark-highlight'));
+  document.querySelectorAll('.task-header').forEach(h => h.classList.remove('bookmark-highlight'));
+
+  if (existing === code) {
+    // Deselecting — briefly suppress hover on this item
+    const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+    if (codeEl) {
+      const itemEl = codeEl.closest('.item');
+      itemEl.classList.add('no-hover');
+      setTimeout(() => itemEl.classList.remove('no-hover'), 800);
+    }
+    localStorage.removeItem('cfi_bookmark');
+    document.getElementById('bookmarkBanner').classList.remove('visible');
+    return;
+  }
+
+  localStorage.setItem('cfi_bookmark', code);
+  document.getElementById('bookmarkBanner').classList.add('visible');
+  applyBookmarkUI(code);
+}
+
+function applyBookmarkUI(code) {
+  const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+  if (!codeEl) return;
+
+  codeEl.classList.add('bookmarked');
+  codeEl.closest('.item').classList.add('is-bookmarked');
+
+  const taskBody = codeEl.closest('.task-body');
+  if (taskBody) {
+    const taskHeader = taskBody.previousElementSibling;
+    if (taskHeader) taskHeader.classList.add('bookmark-highlight');
+  }
+
+  const areaBody = codeEl.closest('.area-body');
+  if (areaBody) {
+    const areaHeader = areaBody.previousElementSibling;
+    if (areaHeader) areaHeader.classList.add('bookmark-highlight');
+  }
+}
+
+function goToBookmark() {
+  const code = localStorage.getItem('cfi_bookmark');
+  if (!code) return;
+
+  const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+  if (!codeEl) return;
+
+  const itemDiv = codeEl.closest('.item');
+  const sectionBody = itemDiv.closest('.section-body');
+  const taskBody = itemDiv.closest('.task-body');
+  const areaBody = itemDiv.closest('.area-body');
+
+  if (areaBody) {
+    areaBody.classList.remove('hidden');
+    const areaHeader = areaBody.previousElementSibling;
+    if (areaHeader) areaHeader.classList.remove('collapsed');
+  }
+  if (taskBody) {
+    taskBody.classList.remove('hidden');
+    const taskHeader = taskBody.previousElementSibling;
+    if (taskHeader) {
+      const chevron = taskHeader.querySelector('.task-chevron');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+  }
+  if (sectionBody) {
+    sectionBody.classList.remove('hidden');
+    const sectionLabel = sectionBody.previousElementSibling;
+    if (sectionLabel) {
+      const chevron = sectionLabel.querySelector('.section-chevron');
+      if (chevron) chevron.textContent = '▾';
+    }
+  }
+
+  setTimeout(() => itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+}
+
+function loadBookmark() {
+  const code = localStorage.getItem('cfi_bookmark');
+  if (!code) return;
+  document.getElementById('bookmarkBanner').classList.add('visible');
+  applyBookmarkUI(code);
+}
+
+// ── Notes Panel ───────────────────────────────────────────────────
+function toggleNotesPanel() {
+  const panel = document.getElementById('notesPanel');
+  const btn = document.getElementById('notesPanelBtn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active', !isOpen);
+}
+
+function initNotesPanel() {
+  const editor = document.getElementById('notesEditor');
+  const saved = localStorage.getItem('cfi_notes');
+  if (saved) editor.innerHTML = saved;
+
+  editor.addEventListener('input', () => {
+    localStorage.setItem('cfi_notes', editor.innerHTML);
+    const ind = document.getElementById('notesSaveIndicator');
+    ind.textContent = 'Saved';
+    ind.style.opacity = '1';
+    clearTimeout(ind._t);
+    ind._t = setTimeout(() => { ind.style.opacity = '0'; }, 1500);
+  });
+}
+
+
+// ── Password / Lock ───────────────────────────────────────────────
+const DEFAULT_PASSWORD = 'cfistudy';
+
+function getStoredHash() {
+  return localStorage.getItem('cfi_pw_hash') || hashPassword(DEFAULT_PASSWORD);
+}
+
+function hashPassword(pw) {
+  // Simple but sufficient deterrent hash for a study app
+  let hash = 0;
+  for (let i = 0; i < pw.length; i++) {
+    hash = ((hash << 5) - hash) + pw.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'h_' + Math.abs(hash).toString(36) + '_' + pw.length;
+}
+
+function checkLock() {
+  const unlocked = sessionStorage.getItem('cfi_unlocked');
+  if (unlocked === '1') {
+    document.getElementById('lockScreen').classList.add('hidden');
+  }
+  // else lock screen stays visible by default
+}
+
+function unlockApp() {
+  const input = document.getElementById('lockInput');
+  const errorEl = document.getElementById('lockError');
+  const val = input.value;
+
+  if (hashPassword(val) === getStoredHash()) {
+    sessionStorage.setItem('cfi_unlocked', '1');
+    document.getElementById('lockScreen').classList.add('hidden');
+    errorEl.textContent = '';
+  } else {
+    errorEl.textContent = 'Incorrect password';
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(() => input.classList.remove('error'), 400);
+  }
+}
+
+function openChangePw() {
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwConfirm').value = '';
+  document.getElementById('pwModalError').textContent = '';
+  document.getElementById('changePwModal').classList.add('open');
+  setTimeout(() => document.getElementById('pwCurrent').focus(), 100);
+}
+
+function closeChangePw() {
+  document.getElementById('changePwModal').classList.remove('open');
+}
+
+function saveNewPassword() {
+  const current = document.getElementById('pwCurrent').value;
+  const newPw = document.getElementById('pwNew').value;
+  const confirm = document.getElementById('pwConfirm').value;
+  const errEl = document.getElementById('pwModalError');
+
+  if (hashPassword(current) !== getStoredHash()) {
+    errEl.textContent = 'Current password is incorrect'; return;
+  }
+  if (newPw.length < 4) {
+    errEl.textContent = 'New password must be at least 4 characters'; return;
+  }
+  if (newPw !== confirm) {
+    errEl.textContent = 'Passwords do not match'; return;
+  }
+
+  localStorage.setItem('cfi_pw_hash', hashPassword(newPw));
+  errEl.textContent = '';
+  closeChangePw();
+
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '✓ Password updated!'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2500);
+}
+
+
+buildGuide();
+loadAll();
+loadBookmark();
+initNotesPanel();
+checkLock();
+
+</script>
+</body>
+</html>
