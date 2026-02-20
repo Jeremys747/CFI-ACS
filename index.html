@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFI ACS Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f4f2;
+    --white: #ffffff;
+    --ink: #111111;
+    --muted: #999999;
+    --border: #e0e0e0;
+    --accent: #d95f1a;
+    --accent-dark: #b34d10;
+    --header-bg: #3d5166;
+    --task-header: #2f3f50;
+    --reveal-bg: #efefed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  header {
+    background: var(--header-bg);
+    padding: 2.2rem 2.5rem 1.8rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .notes-icon-btn {
+    background: #3d5166;
+    border: none;
+    border-radius: 10px;
+    width: 2.8rem;
+    height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+
+  .notes-icon-btn:hover { background: #2e3d4f; transform: scale(1.08); }
+  .notes-icon-btn:active { transform: scale(0.95); }
+  .notes-icon-btn.active { background: #2e3d4f; }
+
+  .manual-save-btn {
+    background: #2e8b57;
+    border: none;
+    border-radius: 10px;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
+  .manual-save-btn:hover { background: #236b43; transform: scale(1.08); }
+  .manual-save-btn:active { transform: scale(0.95); }
+
+  .edit-mode-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    padding: 0;
+  }
+
+  .edit-mode-btn:hover { background: var(--accent-dark); transform: scale(1.08); }
+  .edit-mode-btn:active { transform: scale(0.95); }
+  .edit-mode-btn.active { background: var(--accent-dark); }
+  .edit-mode-btn.active:hover { background: #8c3b09; }
+
+  header h1 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  header p {
+    color: #e8f0f8;
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.63rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.18s;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .btn-reveal { background: #2e8b57; border-color: #2e8b57; color: #fff; }
+  .btn-reveal:hover { background: #236b43; border-color: #236b43; }
+  .btn-hide-all, .btn-expand, .btn-collapse, .btn-export, .btn-import, .btn-hide {
+    background: transparent;
+    border-color: #fff;
+    color: #fff;
+  }
+  .btn-hide-all { background: #888; border-color: #888; color: #fff; }
+  .btn-hide-all:hover { background: #666 !important; border-color: #666 !important; }
+  .btn-hide-all:hover, .btn-expand:hover, .btn-collapse:hover,
+  .btn-export:hover, .btn-import:hover, .btn-hide:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  .area {
+    background: var(--white);
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+  }
+
+  .area-header {
+    background: var(--header-bg);
+    color: #fff;
+    padding: 1rem 1.5rem 1rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .area-header h2 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .area-header .chevron {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
+  .area-header.collapsed .chevron { }
+
+  .area-header { transition: background 0.15s; }
+  .area-header:hover { background: #324252; }
+
+  .task-header { transition: background 0.15s; }
+  .task-header:hover { background: #e0e0e0; }
+
+  .area-body { padding: 1.5rem; }
+  .area-body.hidden { display: none; }
+
+  .task {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .task-header {
+    background: #eaeaea;
+    color: #333;
+    padding: 0.6rem 1rem 0.6rem 0.75rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .task-header .task-ref {
+    display: inline;
+    color: var(--accent);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .task-body { padding: 1.2rem; background: var(--white); }
+  .task-body.hidden { display: none; }
+
+  .section-wrapper {
+    margin-bottom: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .section-label {
+    background: #eaeaea;
+    padding: 0.55rem 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s;
+  }
+
+  .section-label:hover { background: #e0e0e0; }
+  .section-wrapper.open .section-label { background: #e0e0e0; }
+
+  .task-chevron, .section-chevron {
+    color: #666;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    display: inline-block;
+    transition: transform 0.25s;
+    transform: rotate(-90deg);
+  }
+
+  .section-body {
+    padding: 0.75rem 1rem;
+    background: #f9f9f9;
+  }
+
+  .section-body.hidden { display: none; }
+
+  .item {
+    margin: 0.7rem 0;
+    display: grid;
+    grid-template-columns: 145px 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.25rem 0.35rem;
+    border-radius: 4px;
+    transition: background 0.15s, outline 0.15s;
+  }
+
+  .item-code {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.67rem;
+    color: var(--accent);
+    font-weight: 500;
+    padding: 0.25rem 0.4rem;
+    word-break: break-all;
+    letter-spacing: 0.02em;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .item:has(.item-code:hover) {
+    background: #fff8f4;
+    outline: 2px solid var(--accent);
+    outline-offset: 0px;
+  }
+
+  .item.no-hover:has(.item-code:hover) {
+    background: transparent;
+    outline: none;
+  }
+
+  .item-code.bookmarked {
+    background: transparent;
+    outline: none;
+  }
+
+  .item.is-bookmarked {
+    background: #fff8f4;
+    border-radius: 4px;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .item.is-bookmarked > .item-code {
+    background: transparent;
+    outline: none;
+  }
+
+  @keyframes pulse-border {
+    0%   { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 1); }
+    50%  { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 0.3); }
+    100% { box-shadow: inset 0 0 0 3px rgba(217, 95, 26, 1); }
+  }
+
+  .area-header.bookmark-highlight {
+    animation: pulse-border 1.5s ease-in-out infinite;
+  }
+
+  .task-header.bookmark-highlight {
+    animation: pulse-border 1.5s ease-in-out infinite;
+  }
+
+  .section-label.bookmark-highlight {
+    animation: pulse-border 1.5s ease-in-out infinite;
+  }
+
+  .bookmark-banner {
+    display: none;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.55rem 1.4rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    border-radius: 10px;
+    width: fit-content;
+    margin: 1rem auto 0;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(217, 95, 26, 0.35);
+  }
+
+  .bookmark-banner:hover { background: var(--accent-dark); transform: scale(1.03); }
+  .bookmark-banner.visible { display: block; }
+
+  .item-fields { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .item-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.2rem 0;
+  }
+
+  .item-title {
+    font-size: 0.87rem;
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 400;
+    flex: 1;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 3px;
+    padding: 0.1rem 0.3rem;
+    margin: -0.1rem -0.3rem;
+  }
+
+  .item-title.conf-green  { background: #d4f0dc; color: #1a5c30; }
+  .item-title.conf-yellow { background: #fef3c7; color: #7c5c00; }
+  .item-title.conf-red    { background: #fde8e8; color: #7c1d1d; }
+
+  .conf-dots-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    padding-top: 0.15rem;
+  }
+
+  .conf-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    opacity: 0.35;
+    background: transparent;
+    padding: 0;
+  }
+
+  .conf-dot:hover { transform: scale(1.3); opacity: 0.7; }
+
+  .conf-dot.green  { border-color: #2e8b57; }
+  .conf-dot.yellow { border-color: #d4a017; }
+  .conf-dot.red    { border-color: #c0392b; }
+
+  .conf-dot.active { opacity: 1; }
+  .conf-dot.active.green  { background: #2e8b57; }
+  .conf-dot.active.yellow { background: #d4a017; }
+  .conf-dot.active.red    { background: #c0392b; }
+
+  .section-body { }
+  .section-body.hidden { display: none; }
+
+  .section-chevron {
+    font-size: 0.75rem;
+    margin-left: 0.4rem;
+    transition: transform 0.2s;
+  }
+
+  .field-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .field-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.57rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .field-with-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .side-toggle-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.55rem;
+    border: 1.5px solid #2e8b57;
+    border-radius: 10px;
+    background: transparent;
+    color: #2e8b57;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .side-toggle-btn:hover { border-color: #236b43; color: #236b43; }
+
+  .side-toggle-btn.is-hidden {
+    border-color: #aaa;
+    color: #aaa;
+  }
+
+  .side-toggle-btn.is-hidden:hover { border-color: #555; color: #555; }
+
+  .editor-outer {
+    flex: 1;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: #e8e8e8;
+  }
+
+  .editor-outer.summary-type .editor-toolbar,
+  .editor-outer.task-summary-type .editor-toolbar {
+    background: #e4e4e4;
+    border-color: #ddd;
+  }
+
+  .editor-toolbar button {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.75rem;
+    padding: 0.12rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.5;
+  }
+
+  .editor-toolbar button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .editor-toolbar .tb-bold { font-weight: 700; }
+  .editor-toolbar .tb-italic { font-style: italic; }
+  .editor-toolbar .tb-underline { text-decoration: underline; }
+  .editor-toolbar .tb-done {
+    color: #333;
+    border-color: transparent;
+    background: transparent;
+    font-weight: 400;
+    opacity: 0.5;
+  }
+  .editor-toolbar .tb-done:hover { background: transparent !important; border-color: transparent !important; color: #333 !important; opacity: 1; }
+
+  .info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.85);
+    font-size: 0.62rem;
+    font-weight: 700;
+    font-family: 'Barlow', sans-serif;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: transparent;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+    margin-left: 0.5rem;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+  }
+  .info-btn:hover { background: transparent; border-color: rgba(255,255,255,0.7); color: rgba(255,255,255,0.85); transform: scale(1.2); }
+  .info-btn.obj-btn {
+    border-color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.8);
+  }
+  .info-btn.obj-btn:hover {
+    background: transparent !important;
+    border-color: rgba(0,0,0,0.25) !important;
+    color: #555 !important;
+    transform: scale(1.2);
+  }
+
+  .info-popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #222;
+    max-width: 420px;
+    min-width: 260px;
+  }
+  .info-popup.open { display: block; }
+  .info-popup strong {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 0.4rem;
+  }
+    position: absolute;
+    inset: 0;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    border-radius: 4px;
+    cursor: default;
+  }
+
+  .refs-toggle {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.32rem;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-top: 0.1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  .refs-toggle:hover { color: rgba(255,255,255,0.6); }
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.58rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .reveal-overlay.hidden-overlay { display: none; }
+
+  .editor-outer.is-hidden-state {
+    min-height: 0 !important;
+  }
+
+  .editor-outer.is-hidden-state .rich-editor {
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden;
+  }
+
+  .editor-outer.is-hidden-state .editor-toolbar {
+    display: none;
+  }
+
+  .editor-toolbar {
+    display: none;
+  }
+
+  .editor-outer.toolbar-active .editor-toolbar {
+    display: flex;
+  }
+
+  .editor-outer.toolbar-active .rich-editor {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .rich-editor {
+    width: 100%;
+    min-height: 54px;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--ink);
+    background: #f2f2f2;
+    outline: none;
+    overflow-wrap: break-word;
+  }
+
+  .rich-editor:focus { border-color: var(--accent); background: #ebebeb; }
+
+  .rich-editor.summary-editor {
+    background: #eeeeee;
+    border-color: #ddd;
+    min-height: 44px;
+    max-height: 25vh;
+  }
+
+  .rich-editor.summary-editor:focus { border-color: var(--accent); background: #e8e8e8; }
+
+  .rich-editor.task-summary-editor {
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    min-height: 68px;
+    max-height: 30vh;
+  }
+
+  .rich-editor.task-summary-editor:focus { border-color: var(--accent); background: #e8e8e8; }
+
+  .rich-editor:empty:before {
+    content: attr(data-placeholder);
+    color: #ccc;
+    pointer-events: none;
+    display: block;
+  }
+
+  .task-summary-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f0ee;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .task-summary-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.58rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+  }
+
+  .more-options-wrap { position: relative; }
+
+  .more-options-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 200;
+    width: 320px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  .more-options-menu.open { display: block; }
+
+  .more-options-menu button,
+  .more-options-menu a {
+    display: block;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    border: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .more-options-menu button { color: #c0392b; }
+  .more-options-menu button:hover { background: #fdf0ef; }
+  .more-options-menu a { color: #222; }
+  .more-options-menu a:hover { background: #f4f4f2; }
+
+  .link-btn-edit:hover { background: #fdf0ef !important; color: #c0392b !important; }
+  .link-btn-add:hover { background: #edf7f1 !important; color: #236b43 !important; }
+  .link-btn-save:hover { background: #236b43 !important; }
+  .link-btn-cancel:hover { background: #c0392b !important; color: #fff !important; border-color: #c0392b !important; }
+    background: #2e8b57 !important;
+    color: #fff !important;
+    border-color: #2e8b57 !important;
+  }
+
+  .notes-btn:hover { background: #236b43 !important; border-color: #236b43 !important; }
+  .notes-btn.active { background: #236b43 !important; border-color: #236b43 !important; }
+
+  .notes-panel {
+    position: fixed;
+    top: 175px;
+    right: -440px;
+    width: 400px;
+    height: calc(100vh - 195px);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .notes-panel.open { right: 5.2rem; opacity: 1; pointer-events: all; }
+
+  .notes-panel-header {
+    background: var(--header-bg);
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .notes-panel-header h3 {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .notes-panel-close {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .notes-panel-close:hover { opacity: 1; }
+
+  .notes-panel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    overflow: hidden;
+  }
+
+  .notes-editor {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--ink);
+    background: #f8f8f6;
+    outline: none;
+    overflow-y: auto;
+    resize: none;
+  }
+
+  .notes-editor:focus { border-color: #2e8b57; background: #f4f4f2; }
+
+  .notes-editor:empty:before {
+    content: attr(data-placeholder);
+    color: #ccc;
+    pointer-events: none;
+    display: block;
+  }
+
+  .notes-save-indicator {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.58rem;
+    color: #2e8b57;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.4s;
+    text-align: right;
+    height: 1rem;
+  }
+
+  @media (max-width: 600px) {
+
+    /* Header */
+    header {
+      padding: 1.2rem 1rem 1rem;
+      position: relative;
+    }
+
+    /* Title row: h1 on left, buttons on right, all in one line */
+    .header-top {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .header-top > div:first-child {
+      flex: 1;
+      min-width: 0;
+    }
+
+    header h1 {
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    header p { font-size: 0.6rem; }
+
+    /* Edit + Save buttons sit inline with the title on mobile */
+    .header-top > div:last-child {
+      flex-direction: row;
+      align-items: center;
+      flex-shrink: 0;
+      gap: 0;
+    }
+
+    .edit-mode-btn,
+    .manual-save-btn {
+      width: 2rem;
+      height: 2rem;
+      margin-left: 0.45rem;
+    }
+
+    /* Controls — single scrollable row with dynamic fade hint */
+    .controls {
+      margin-top: 0.75rem;
+      gap: 0.4rem;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .controls::-webkit-scrollbar { display: none; }
+
+    /* Remove flex-shrink so buttons don't squish */
+    .controls .btn,
+    .controls .more-options-wrap,
+    .controls label.btn {
+      flex-shrink: 0;
+    }
+
+    .btn {
+      font-size: 0.55rem;
+      padding: 0.35rem 0.7rem;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    /* Main content */
+    .main {
+      padding: 1.2rem 0.75rem 4rem;
+    }
+
+    .area-body { padding: 0.75rem; }
+
+    .task-body { padding: 0.75rem; }
+
+    .task-header {
+      font-size: 0.78rem;
+      padding: 0.7rem 0.9rem;
+    }
+
+    /* Item grid — stack code above content */
+    .item {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+      padding: 0.35rem 0.25rem;
+    }
+
+    .item-code {
+      font-size: 0.62rem;
+      padding: 0.15rem 0.3rem;
+    }
+
+    /* Title row and confidence dots */
+    .item-title { font-size: 0.83rem; }
+
+    .conf-dot {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* Field labels and reveal buttons */
+    .field-label-row { gap: 0.3rem; }
+
+    .side-toggle-btn {
+      font-size: 0.5rem;
+      padding: 0.28rem 0.45rem;
+    }
+
+    /* Rich text toolbar */
+    .editor-toolbar {
+      flex-wrap: wrap;
+      gap: 0.2rem;
+      padding: 0.2rem 0.3rem;
+    }
+
+    .editor-toolbar button {
+      font-size: 0.68rem;
+      padding: 0.1rem 0.4rem;
+    }
+
+    /* Rich editor max heights + 16px min to prevent iOS/Android auto-zoom */
+    .rich-editor { max-height: 35vh; font-size: 16px; }
+    .rich-editor.summary-editor { max-height: 20vh; font-size: 16px; }
+    .rich-editor.task-summary-editor { max-height: 25vh; font-size: 16px; }
+    .notes-editor { font-size: 16px; }
+
+    /* Task summary section */
+    .task-summary-section { padding: 0.75rem; }
+
+    /* Notes panel — floating card above the button on mobile */
+    .notes-panel {
+      top: 1rem;
+      bottom: 5.5rem;
+      right: 1rem;
+      left: 1rem;
+      width: auto;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      transform: translateY(20px);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .notes-panel.open {
+      right: 1rem;
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .notes-panel-header { border-radius: 16px 16px 0 0; }
+
+    /* Links menu */
+    .bookmark-banner {
+      font-size: 0.55rem;
+      padding: 0.45rem 1rem;
+      margin: 0.75rem auto 0;
+    }
+
+    /* Section label */
+    .section-label { font-size: 0.8rem; }
+
+  }
+
+  /* ── Password Screen ─────────────────────────────────────────── */
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--header-bg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .lock-screen.hidden { display: none; }
+
+  .lock-card {
+    background: #1e2d3d;
+    border: 1px solid #2e4560;
+    border-radius: 16px;
+    padding: 2.5rem 2rem 2rem;
+    width: min(320px, 90vw);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .lock-icon {
+    color: var(--accent);
+    opacity: 0.9;
+    animation: prop-spin 2.5s linear infinite;
+    transform-origin: center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  @keyframes prop-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .lock-title {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+  }
+
+  .lock-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7a9bb5;
+    text-align: center;
+    margin-top: -0.5rem;
+  }
+
+  .lock-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #162232;
+    border: 1.5px solid #2e4560;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .lock-input:focus { border-color: var(--accent); }
+  .lock-input.error { border-color: #e74c3c; animation: shake 0.3s ease; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .lock-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 600;
+  }
+
+  .lock-btn:hover { background: var(--accent-dark); }
+
+  .lock-error {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    color: #e74c3c;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    min-height: 1rem;
+    text-align: center;
+  }
+
+  /* ── Change Password Modal ───────────────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal-card {
+    background: #1e2d3d;
+    border: 1px solid #2e4560;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .modal-title {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .modal-input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    background: #162232;
+    border: 1.5px solid #2e4560;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-input::placeholder { color: #4a6a85; }
+
+  .modal-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.57rem;
+    color: #7a9bb5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: -0.5rem;
+  }
+
+  .modal-error {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.58rem;
+    color: #e74c3c;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    min-height: 0.9rem;
+  }
+
+  .modal-btns {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+  }
+
+  .modal-btn-save {
+    flex: 1;
+    padding: 0.6rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 600;
+  }
+
+  .modal-btn-save:hover { background: var(--accent-dark); }
+
+  .modal-btn-cancel {
+    flex: 1;
+    padding: 0.6rem;
+    background: transparent;
+    border: 1.5px solid #2e4560;
+    border-radius: 6px;
+    color: #7a9bb5;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-btn-cancel:hover { border-color: #7a9bb5; color: #fff; }
+
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <svg class="lock-icon" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Blade 1: pointing up -->
+      <path d="M28 26 C26 18, 22 8, 28 4 C34 8, 30 18, 28 26Z" fill="currentColor" opacity="0.9"/>
+      <!-- Blade 2: pointing lower-right -->
+      <path d="M28 26 C26 18, 22 8, 28 4 C34 8, 30 18, 28 26Z" fill="currentColor" opacity="0.9" transform="rotate(120 28 28)"/>
+      <!-- Blade 3: pointing lower-left -->
+      <path d="M28 26 C26 18, 22 8, 28 4 C34 8, 30 18, 28 26Z" fill="currentColor" opacity="0.9" transform="rotate(240 28 28)"/>
+      <!-- Hub -->
+      <circle cx="28" cy="28" r="4" fill="currentColor"/>
+      <circle cx="28" cy="28" r="2" fill="#1a2738"/>
+    </svg>
+    <div>
+      <div class="lock-title">CFI ACS Study Guide</div>
+
+    </div>
+    <input class="lock-input" id="lockInput" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') unlockApp()">
+    <div class="lock-error" id="lockError"></div>
+    <button class="lock-btn" onclick="unlockApp()">Unlock</button>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="changePwModal">
+  <div class="modal-card">
+    <div class="modal-title">Change Password</div>
+    <div class="modal-label">Current Password</div>
+    <input class="modal-input" id="pwCurrent" type="password" placeholder="Current password">
+    <div class="modal-label">New Password</div>
+    <input class="modal-input" id="pwNew" type="password" placeholder="New password">
+    <div class="modal-label">Confirm New Password</div>
+    <input class="modal-input" id="pwConfirm" type="password" placeholder="Confirm new password">
+    <div class="modal-error" id="pwModalError"></div>
+    <div class="modal-btns">
+      <button class="modal-btn-cancel" onclick="closeChangePw()">Cancel</button>
+      <button class="modal-btn-save" onclick="saveNewPassword()">Save</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="header-top">
+    <div>
+      <h1>CFI ACS Study Guide</h1>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+      <div style="display:flex;align-items:center;">
+        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit Mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5 2.5L13.5 4.5L5.5 12.5H3.5V10.5L11.5 2.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+            <path d="M2.5 13.5H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      <button class="manual-save-btn" onclick="manualSave()" title="Save"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="2,7 6,11 12,3" stroke="white" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn btn-reveal" id="revealHideBtn" onclick="toggleRevealHide()">Reveal All Answers</button>
+    <button class="btn btn-expand" id="expandCollapseBtn" onclick="toggleExpandCollapse()">Expand All Tasks</button>
+    <button class="btn btn-export" onclick="exportAnswers()">Export Answers</button>
+    <label class="btn btn-import">Import Answers<input type="file" accept=".json" onchange="importAnswers(event)" style="display:none;"></label>
+    <div class="more-options-wrap">
+      <button class="btn btn-hide" onclick="toggleLinks()">Links ▾</button>
+      <div class="more-options-menu" id="linksMenu">
+        <div id="linksList"></div>
+        <div class="links-add-row" id="linksAddRow" style="display:none;padding:0.5rem;">
+          <input id="linkTitle" placeholder="Name (e.g. FAA Handbook)" style="width:100%;padding:0.4rem 0.6rem;margin-bottom:0.3rem;box-sizing:border-box;background:#f9f9f9;border:1px solid var(--border);border-radius:4px;color:#222;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;outline:none;">
+          <div style="display:flex;margin-bottom:0.4rem;border:1px solid var(--border);border-radius:4px;overflow:hidden;background:#f9f9f9;">
+            <button onclick="pasteUrl()" title="Paste from clipboard" style="padding:0 0.5rem;background:transparent;border:none;cursor:pointer;color:#888;display:flex;align-items:center;flex-shrink:0;" onmouseover="this.style.color='#333'" onmouseout="this.style.color='#888'">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="3" width="8" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4 4H3a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M6 3V2h2v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <input id="linkUrl" placeholder="" style="flex:1;padding:0.4rem 0.6rem 0.4rem 0;box-sizing:border-box;background:transparent;border:none;color:#222;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;outline:none;">
+          </div>
+          <div style="display:flex;gap:0.4rem;">
+            <button onclick="saveNewLink()" class="link-btn-save" style="flex:1;padding:0.35rem;background:#2e8b57;border:none;border-radius:4px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:0.63rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Save</button>
+            <button onclick="cancelAddLink()" class="link-btn-cancel" style="flex:1;padding:0.35rem;background:#fdf0ef;border:1px solid #c0392b;border-radius:4px;color:#c0392b;font-family:'Barlow Condensed',sans-serif;font-size:0.63rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Cancel</button>
+          </div>
+        </div>
+        <button onclick="showAddLink()" id="addLinkBtn" class="link-btn-add" style="width:100%;padding:0.55rem 1rem;background:transparent;border:none;color:#2e8b57;font-family:'Barlow Condensed',sans-serif;font-size:0.63rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;text-align:left;box-sizing:border-box;">Add Link</button>
+      </div>
+    </div>
+    <div class="more-options-wrap">
+      <button class="btn btn-hide" onclick="toggleMoreOptions()">More Options ▾</button>
+      <div class="more-options-menu" id="moreOptionsMenu">
+        <button onclick="openChangePw(); toggleMoreOptions()">Change Password</button>
+        <button onclick="clearSaved(); toggleMoreOptions()">Clear All Saved Answers</button>
+      </div>
+    </div>
+    <span id="save-indicator" style="font-family:'DM Mono',monospace;font-size:0.63rem;color:#2e8b57;opacity:0;transition:opacity 0.5s;margin-left:0.25rem;"></span>
+  </div>
+</header>
+
+<div class="bookmark-banner" id="bookmarkBanner" onclick="goToBookmark()">Resume from Bookmark</div>
+
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-panel-header">
+    <h3>Plan / Notes</h3>
+    <button class="notes-panel-close" onclick="toggleNotesPanel()" title="Close">✕</button>
+  </div>
+  <div class="notes-panel-body">
+    <div class="notes-save-indicator" id="notesSaveIndicator">Saved</div>
+    <div class="notes-editor" id="notesEditor" contenteditable="true" data-placeholder="Write your study plan, goals, reminders, or notes here..."></div>
+  </div>
+</div>
+
+<div class="main" id="studyGuide"></div>
+
+<script>
+const data = {
+  areaIndex: 'I',
+  area: "Area of Operation I: Fundamentals of Instructing",
+  note: "The evaluator must select Task E, Task F, and at least one other Task for initial flight instructor applicants. During a practical test for an added flight instructor rating or flight instructor reinstatement, the evaluator has discretion to evaluate the applicant on Fundamentals of Instructing.",
+  tasks: [
+    {
+      id: "Task A", title: "Effects of Human Behavior and Communication on the Learning Process",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands human behavior and effective communication, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.A.K1", text: "Elements of human behavior, including:" },
+          { code: "FI.I.A.K1a", text: "a. Definitions of human behavior" },
+          { code: "FI.I.A.K1b", text: "b. Instructor and learner relationship" },
+          { code: "FI.I.A.K1c", text: "c. Motivation" },
+          { code: "FI.I.A.K1d", text: "d. Human needs" },
+          { code: "FI.I.A.K1e", text: "e. Defense mechanisms" },
+          { code: "FI.I.A.K2", text: "Learner emotional reactions, including:" },
+          { code: "FI.I.A.K2a", text: "a. Anxiety and stress" },
+          { code: "FI.I.A.K2b", text: "b. Impatience" },
+          { code: "FI.I.A.K2c", text: "c. Worry or lack of interest" },
+          { code: "FI.I.A.K2d", text: "d. Physical discomfort, illness, fatigue, and dehydration" },
+          { code: "FI.I.A.K2e", text: "e. Apathy due to inadequate instruction" },
+          { code: "FI.I.A.K3", text: "Teaching the adult learner." },
+          { code: "FI.I.A.K4", text: "Effective communication, including:" },
+          { code: "FI.I.A.K4a", text: "a. Basic elements of communication" },
+          { code: "FI.I.A.K4b", text: "b. Barriers to effective communication" },
+          { code: "FI.I.A.K4c", text: "c. Developing communication skills" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.A.R1", text: "Recognizing and accommodating human behavior." },
+          { code: "FI.I.A.R2", text: "Barriers to communication." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.A.S1", text: "Give examples of how human behavior affects motivation and learning." },
+          { code: "FI.I.A.S2", text: "Describe what the instructor can do to deal with:" },
+          { code: "FI.I.A.S2a", text: "a. Serious abnormal emotional behavior" },
+          { code: "FI.I.A.S2b", text: "b. Defense mechanisms" },
+          { code: "FI.I.A.S3", text: "Use effective communication in ground and flight instruction." },
+        ]}
+      ]
+    },
+    {
+      id: "Task B", title: "Learning Process",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands the learning process, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.B.K1", text: "Definitions of learning." },
+          { code: "FI.I.B.K2", text: "Learning theory as it applies to ground and flight instruction, including:" },
+          { code: "FI.I.B.K2a", text: "a. Behaviorism" },
+          { code: "FI.I.B.K2b", text: "b. Cognitive Theory" },
+          { code: "FI.I.B.K3", text: "Perceptions and insight." },
+          { code: "FI.I.B.K4", text: "Acquiring knowledge." },
+          { code: "FI.I.B.K5", text: "Laws of learning." },
+          { code: "FI.I.B.K6", text: "Domains of learning, including:" },
+          { code: "FI.I.B.K6a", text: "a. Cognitive" },
+          { code: "FI.I.B.K6b", text: "b. Affective" },
+          { code: "FI.I.B.K6c", text: "c. Psychomotor" },
+          { code: "FI.I.B.K7", text: "Characteristics of learning." },
+          { code: "FI.I.B.K8", text: "Scenario-based training (SBT)." },
+          { code: "FI.I.B.K9", text: "Acquiring skill knowledge, including:" },
+          { code: "FI.I.B.K9a", text: "a. Stages" },
+          { code: "FI.I.B.K9b", text: "b. Knowledge of results" },
+          { code: "FI.I.B.K9c", text: "c. How to develop skills" },
+          { code: "FI.I.B.K9d", text: "d. Learning plateaus" },
+          { code: "FI.I.B.K10", text: "Types of practice." },
+          { code: "FI.I.B.K11", text: "Evaluation versus critique." },
+          { code: "FI.I.B.K12", text: "Distractions, interruptions, fixation, and inattention." },
+          { code: "FI.I.B.K13", text: "Errors." },
+          { code: "FI.I.B.K14", text: "Memory, including:" },
+          { code: "FI.I.B.K14a", text: "a. Sensory" },
+          { code: "FI.I.B.K14b", text: "b. Short-Term Memory (STM) and Long-Term Memory (LTM)" },
+          { code: "FI.I.B.K14c", text: "c. How usage affects memory" },
+          { code: "FI.I.B.K14d", text: "d. Forgetting" },
+          { code: "FI.I.B.K15", text: "Retention of learning." },
+          { code: "FI.I.B.K16", text: "Transfer of learning." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.B.R1", text: "Inadequate or incomplete instruction." },
+          { code: "FI.I.B.R2", text: "Lack of learner motivation." },
+          { code: "FI.I.B.R3", text: "Recognizing and correcting learner errors." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.B.S1", text: "Apply educational theories to ground and flight instruction." },
+          { code: "FI.I.B.S2", text: "Recognize and correct conditions that undermine the learning process." },
+          { code: "FI.I.B.S3", text: "Plan for and use techniques, including realistic distractions that teach flight students how to manage a workload." },
+        ]}
+      ]
+    },
+    {
+      id: "Task C", title: "Course Development, Lesson Plans, and Classroom Training Techniques",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands the teaching process, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.C.K1", text: "Teaching, including:" },
+          { code: "FI.I.C.K1a", text: "a. Process" },
+          { code: "FI.I.C.K1b", text: "b. Essential skills" },
+          { code: "FI.I.C.K2", text: "Course of training." },
+          { code: "FI.I.C.K3", text: "Preparation of a lesson, including:" },
+          { code: "FI.I.C.K3a", text: "a. Training objectives and completion standards" },
+          { code: "FI.I.C.K3b", text: "b. Performance-based objectives" },
+          { code: "FI.I.C.K3c", text: "c. Importance of Airman Certification Standards (ACS) in aviation training curricula" },
+          { code: "FI.I.C.K3d", text: "d. Decision-based objectives" },
+          { code: "FI.I.C.K4", text: "Organization of material." },
+          { code: "FI.I.C.K5", text: "Training delivery methods, including:" },
+          { code: "FI.I.C.K5a", text: "a. Lecture" },
+          { code: "FI.I.C.K5b", text: "b. Discussion" },
+          { code: "FI.I.C.K5c", text: "c. Guided discussion" },
+          { code: "FI.I.C.K5d", text: "d. Cooperative or group learning" },
+          { code: "FI.I.C.K5e", text: "e. Demonstration-performance" },
+          { code: "FI.I.C.K5f", text: "f. Drill and practice" },
+          { code: "FI.I.C.K6", text: "Electronic learning (e-Learning)." },
+          { code: "FI.I.C.K7", text: "Instructional aids and training technologies, including:" },
+          { code: "FI.I.C.K7a", text: "a. Characteristics of effective instructional aids" },
+          { code: "FI.I.C.K7b", text: "b. Reasons for use" },
+          { code: "FI.I.C.K7c", text: "c. Guidelines for use" },
+          { code: "FI.I.C.K7d", text: "d. Types" },
+          { code: "FI.I.C.K8", text: "Integrated flight instruction." },
+          { code: "FI.I.C.K9", text: "Problem-based instruction." },
+          { code: "FI.I.C.K10", text: "Planning instructional activity, including:" },
+          { code: "FI.I.C.K10a", text: "a. Blocks of learning" },
+          { code: "FI.I.C.K10b", text: "b. Training syllabus" },
+          { code: "FI.I.C.K10c", text: "c. Lesson plans" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.C.R1", text: "Selection of teaching methods." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.C.S1", text: "Prepare an instructional lesson plan using teaching methods and materials appropriate for Task and learner characteristics, including:" },
+          { code: "FI.I.C.S1a", text: "a. Aeronautical knowledge ground lesson applicable for a classroom" },
+          { code: "FI.I.C.S1b", text: "b. Maneuver introduction and ground lesson" },
+        ]}
+      ]
+    },
+    {
+      id: "Task D", title: "Student Evaluation, Assessment, and Testing",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands evaluation and testing, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.D.K1", text: "Purpose and characteristics of effective assessment." },
+          { code: "FI.I.D.K2", text: "Traditional assessments." },
+          { code: "FI.I.D.K3", text: "Authentic assessments, including:" },
+          { code: "FI.I.D.K3a", text: "a. Learner-centered assessment" },
+          { code: "FI.I.D.K3b", text: "b. Maneuver or procedure grades" },
+          { code: "FI.I.D.K3c", text: "c. Assessing risk management skills" },
+          { code: "FI.I.D.K4", text: "Choosing an effective assessment method." },
+          { code: "FI.I.D.K5", text: "Purposes and types of critiques." },
+          { code: "FI.I.D.K6", text: "Oral assessment, including:" },
+          { code: "FI.I.D.K6a", text: "a. Characteristics of effective questions" },
+          { code: "FI.I.D.K6b", text: "b. Types of questions to avoid" },
+          { code: "FI.I.D.K6c", text: "c. Answering learner questions" },
+          { code: "FI.I.D.K7", text: "Assessment of piloting ability." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.D.R1", text: "Delivering an assessment." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.D.S1", text: "Use appropriate methods and techniques to assess learner performance in ground or flight training." },
+        ]}
+      ]
+    },
+    {
+      id: "Task E", title: "Elements of Effective Teaching in a Professional Environment",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands effects of instructor behavior on effective teaching, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.E.K1", text: "Aviation instructor responsibilities, including:" },
+          { code: "FI.I.E.K1a", text: "a. Helping learners" },
+          { code: "FI.I.E.K1b", text: "b. Providing adequate instruction" },
+          { code: "FI.I.E.K1c", text: "c. Training to established standards of performance" },
+          { code: "FI.I.E.K1d", text: "d. Emphasizing the positive" },
+          { code: "FI.I.E.K1e", text: "e. Minimizing learner frustrations" },
+          { code: "FI.I.E.K2", text: "Flight instructor responsibilities, including supervision and surveillance during training." },
+          { code: "FI.I.E.K3", text: "Flight instructor qualifications and professionalism." },
+          { code: "FI.I.E.K4", text: "Professional development." },
+          { code: "FI.I.E.K5", text: "Instructor ethics and conduct." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.E.R1", text: "Fulfilling instructor responsibilities." },
+          { code: "FI.I.E.R2", text: "Exhibiting professionalism." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.E.S1", text: "Deliver ground or flight instruction on an evaluator-assigned Task in a manner consistent with instructor responsibilities and professional characteristics as stated in K1 through K5." },
+        ]}
+      ]
+    },
+    {
+      id: "Task F", title: "Elements of Effective Teaching that Include Risk Management and Accident Prevention",
+      refs: "FAA-H-8083-2, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands teaching practical risk management, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "FI.I.F.K1", text: "Teaching risk identification, assessment, and mitigation." },
+          { code: "FI.I.F.K2", text: "Teaching risk management tools, including:" },
+          { code: "FI.I.F.K2a", text: "a. Pilot/Aircraft/enVironment/External Pressures (PAVE) checklist" },
+          { code: "FI.I.F.K2b", text: "b. Flight Risk Assessment Tools (FRATs)" },
+          { code: "FI.I.F.K3", text: "When and how to introduce risk management." },
+          { code: "FI.I.F.K4", text: "Risk management teaching techniques by phase of instruction." },
+          { code: "FI.I.F.K5", text: "Managing risk during flight instruction, including:" },
+          { code: "FI.I.F.K5a", text: "a. Common flight instruction risks" },
+          { code: "FI.I.F.K5b", text: "b. Best practices" },
+          { code: "FI.I.F.K5c", text: "c. Special considerations while teaching takeoffs and landings" },
+          { code: "FI.I.F.K6", text: "Aeronautical Decision-Making (ADM) to include using Crew Resource Management (CRM) or Single-Pilot Resource Management (SRM), as appropriate." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "FI.I.F.R1", text: "Hazards associated with providing flight instruction." },
+          { code: "FI.I.F.R2", text: "Obstacles to maintaining situational awareness during flight instruction." },
+          { code: "FI.I.F.R3", text: "Recognizing and managing hazards arising from human behavior, including hazardous attitudes." },
+        ]},
+        { label: "Skills", items: [
+          { code: "FI.I.F.S1", text: "Use scenario-based training (SBT) to demonstrate, teach, and assess risk management and Aeronautical Decision-Making (ADM) skills in the context of a Task specified by the evaluator." },
+          { code: "FI.I.F.S2", text: "Identify, assess, and mitigate risks commonly associated with flight instruction by maintaining:" },
+          { code: "FI.I.F.S2a", text: "a. Awareness and oversight of the learner's actions, with timely and appropriate supervision, intervention, or mitigation as needed" },
+          { code: "FI.I.F.S2b", text: "b. Awareness of the learner's cognitive/physiological state, with timely action to mitigate anxiety, fatigue, or other obstruction to learning" },
+          { code: "FI.I.F.S2c", text: "c. Overall situational awareness of the aircraft's dynamic state, its position in space, and vigilance for unexpected events or changing circumstances that occur in the environment" },
+          { code: "FI.I.F.S3", text: "Model and teach safety practices, including maintaining:" },
+          { code: "FI.I.F.S3a", text: "a. Collision avoidance while simultaneously providing instruction" },
+          { code: "FI.I.F.S3b", text: "b. Avoidance of unnecessary distractions" },
+          { code: "FI.I.F.S3c", text: "c. Coordinated flight" },
+          { code: "FI.I.F.S3d", text: "d. Awareness of who is manipulating controls through positive exchange of flight controls" },
+          { code: "FI.I.F.S3e", text: "e. Continuous awareness of the aircraft's dynamic state and position in the NAS" },
+        ]}
+      ]
+    }
+  ]
+};
+
+function toggleInfoPopup(e, id) {
+  e.stopPropagation();
+  const popup = document.getElementById(id);
+  if (!popup) return;
+  const isOpen = popup.classList.contains('open');
+  document.querySelectorAll('.info-popup.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) {
+    popup.classList.add('open');
+    // Position below the button using fixed coords
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const popupWidth = 420;
+    let left = rect.left;
+    if (left + popupWidth > window.innerWidth - 16) left = window.innerWidth - popupWidth - 16;
+    let top = rect.bottom + 8;
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  }
+}
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.info-popup.open').forEach(p => p.classList.remove('open'));
+});
+
+// ── Formatting ────────────────────────────────────────────────────
+function formatDoc(cmd) {
+  document.execCommand(cmd, false, null);
+}
+
+// ── Image insertion ───────────────────────────────────────────────
+function insertImageInEditor(editor, src) {
+  editor.focus();
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:100%;height:auto;display:block;margin:0.4rem 0;border-radius:3px;';
+  img.contentEditable = 'false';
+  const sel = window.getSelection();
+  if (sel && sel.rangeCount) {
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(img);
+    range.setStartAfter(img);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else {
+    editor.appendChild(img);
+  }
+  localStorage.setItem('cfi_' + editor.id, editor.innerHTML);
+  showSaveIndicator();
+}
+
+// ── Build editor block ────────────────────────────────────────────
+function buildEditorBlock(id, editorClass, placeholder, outerClass) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'editor-outer is-hidden-state ' + outerClass;
+
+  // Toolbar
+  const toolbar = document.createElement('div');
+  toolbar.className = 'editor-toolbar';
+
+  const imgInput = document.createElement('input');
+  imgInput.type = 'file';
+  imgInput.accept = 'image/*';
+  imgInput.style.display = 'none';
+  imgInput.addEventListener('change', () => {
+    const file = imgInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => insertImageInEditor(editor, e.target.result);
+    reader.readAsDataURL(file);
+    imgInput.value = '';
+  });
+
+  toolbar.innerHTML = `
+    <button class="tb-bold" onmousedown="event.preventDefault(); formatDoc('bold')" title="Bold">B</button>
+    <button class="tb-italic" onmousedown="event.preventDefault(); formatDoc('italic')" title="Italic">I</button>
+    <button class="tb-underline" onmousedown="event.preventDefault(); formatDoc('underline')" title="Underline">U</button>
+    <span style="width:1px;background:var(--border);margin:0.1rem 0.2rem;align-self:stretch;"></span>
+    <button class="tb-undo" onmousedown="event.preventDefault(); formatDoc('undo')" title="Undo">↩</button>
+    <button class="tb-redo" onmousedown="event.preventDefault(); formatDoc('redo')" title="Redo">↪</button>
+    <span style="width:1px;background:var(--border);margin:0.1rem 0.2rem;align-self:stretch;"></span>
+  `;
+
+  const imgBtn = document.createElement('button');
+  imgBtn.title = 'Insert Image';
+  imgBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="4.5" cy="5.5" r="1" fill="currentColor"/><path d="M1 9.5L4 6.5L6.5 9L9 7L13 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  imgBtn.onmousedown = (e) => { e.preventDefault(); editor.focus(); imgInput.click(); };
+  toolbar.appendChild(imgBtn);
+  toolbar.appendChild(imgInput);
+
+  // Separator + Done button
+  const doneSep = document.createElement('span');
+  doneSep.style.cssText = 'flex:1;';
+  toolbar.appendChild(doneSep);
+
+  const doneBtn = document.createElement('button');
+  doneBtn.title = 'Done editing';
+  doneBtn.className = 'tb-done';
+  doneBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="1.5,6 5,9.5 10.5,2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter"/></svg>`;
+  doneBtn.onmousedown = (e) => {
+    e.preventDefault();
+    editor.contentEditable = 'false';
+    editor.style.cursor = 'default';
+    wrapper.classList.remove('toolbar-active');
+    wrapper.dataset.editModeLocked = 'true';
+    localStorage.setItem('cfi_' + id, editor.innerHTML);
+    showSaveIndicator();
+    // Re-attach click-to-edit only when NOT in edit mode (or manually unlocking)
+    editor.addEventListener('click', function enableEdit() {
+      if (editModeActive && wrapper.dataset.editModeLocked === 'true') return;
+      editor.contentEditable = 'true';
+      editor.style.cursor = '';
+      wrapper.classList.add('toolbar-active');
+      wrapper.dataset.editModeLocked = 'false';
+      editor.focus();
+      editor.removeEventListener('click', enableEdit);
+    });
+  };
+  toolbar.appendChild(doneBtn);
+
+  wrapper.appendChild(toolbar);
+
+  // Editor
+  const editor = document.createElement('div');
+  editor.className = 'rich-editor ' + editorClass;
+  editor.id = id;
+  editor.contentEditable = 'true';
+  editor.setAttribute('data-placeholder', placeholder);
+  editor.addEventListener('focus', () => {
+    wrapper.classList.add('toolbar-active');
+  });
+
+  editor.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (!wrapper.contains(document.activeElement)) {
+        wrapper.classList.remove('toolbar-active');
+      }
+    }, 150);
+  });
+
+  editor.addEventListener('input', () => {
+    localStorage.setItem('cfi_' + id, editor.innerHTML);
+    showSaveIndicator();
+  });
+
+  editor.addEventListener('paste', (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        const reader = new FileReader();
+        reader.onload = (ev) => insertImageInEditor(editor, ev.target.result);
+        reader.readAsDataURL(file);
+        return;
+      }
+    }
+  });
+  wrapper.appendChild(editor);
+
+  return wrapper;
+}
+
+// ── Build guide ───────────────────────────────────────────────────
+function buildGuide(areaData) {
+  const container = document.getElementById('studyGuide');
+  const areaDiv = document.createElement('div');
+  areaDiv.className = 'area';
+
+  const areaIndex = areaData.areaIndex || 'I';
+  const areaHeader = document.createElement('div');
+  areaHeader.className = 'area-header collapsed';
+  areaHeader.style.position = 'relative';
+  const allRefs = [...new Set(areaData.tasks.map(t => t.refs).join(', ').split(', '))].join(', ');
+
+  const noteId = 'area-note-' + areaIndex;
+  const refsId = 'area-refs-' + areaIndex;
+  const noteBtn = areaData.note ? `<button class="info-btn" title="Note" onclick="toggleInfoPopup(event,'${noteId}')" aria-label="Note" style="flex-shrink:0;margin-right:1rem;">i</button>` : '';
+  areaHeader.innerHTML = `${noteBtn}<div style="flex:1;position:relative;"><h2>${areaData.area}</h2><div style="display:block;margin-top:0.1rem;"><span class="refs-toggle" onclick="toggleInfoPopup(event,'${refsId}')" style="font-size:0.55rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.45);cursor:pointer;display:inline-block;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">References</span></div><div class="info-popup" id="${refsId}"><strong>References</strong>${allRefs}</div></div><span class="chevron">+</span>`;
+
+  if (areaData.note) {
+    const notePopup = document.createElement('div');
+    notePopup.className = 'info-popup';
+    notePopup.id = noteId;
+    notePopup.innerHTML = `<strong>Note</strong>${areaData.note}`;
+    areaHeader.appendChild(notePopup);
+  }
+
+  areaHeader.onclick = (e) => {
+    if (e.target.closest('.info-btn')) return;
+    areaBody.classList.toggle('hidden');
+    areaHeader.classList.toggle('collapsed');
+    areaHeader.querySelector('.chevron').textContent = areaBody.classList.contains('hidden') ? '+' : '−';
+  };
+  areaDiv.appendChild(areaHeader);
+
+  const areaBody = document.createElement('div');
+  areaBody.className = 'area-body hidden';
+
+  areaData.tasks.forEach(task => {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task';
+
+    const taskHeader = document.createElement('div');
+    taskHeader.className = 'task-header';
+    taskHeader.style.position = 'relative';
+    const objId = `obj-${areaIndex}-${task.id.replace(/\s/g,'-')}`;
+    const objBtn = task.objective ? `<button class="info-btn obj-btn" title="Objective" onclick="toggleInfoPopup(event,'${objId}')" aria-label="Objective" style="border-color:rgba(0,0,0,0.25);color:#555;flex-shrink:0;margin-right:0.6rem;">i</button>` : '';
+    taskHeader.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">${objBtn}<div style="flex:1;"><span class="task-ref">${task.id}.</span> ${task.title}</div><span class="task-chevron">▾</span></div>`;
+
+    if (task.objective) {
+      const objPopup = document.createElement('div');
+      objPopup.className = 'info-popup';
+      objPopup.id = objId;
+      objPopup.innerHTML = `<strong>Objective</strong>${task.objective}`;
+      taskHeader.appendChild(objPopup);
+    }
+    const taskBody = document.createElement('div');
+    taskBody.className = 'task-body hidden';
+    taskHeader.onclick = () => {
+      taskBody.classList.toggle('hidden');
+      const chevron = taskHeader.querySelector('.task-chevron');
+      chevron.style.transform = taskBody.classList.contains('hidden') ? 'rotate(-90deg)' : 'rotate(0deg)';
+    };
+    taskDiv.appendChild(taskHeader);
+
+    task.sections.forEach(section => {
+      const sectionWrapper = document.createElement('div');
+      sectionWrapper.className = 'section-wrapper';
+
+      const sectionLabel = document.createElement('div');
+      sectionLabel.className = 'section-label';
+      sectionLabel.innerHTML = `<span>${section.label}</span><span class="section-chevron">▾</span>`;
+
+      const sectionBody = document.createElement('div');
+      sectionBody.className = 'section-body hidden';
+
+      sectionLabel.onclick = () => {
+        sectionBody.classList.toggle('hidden');
+        const isHidden = sectionBody.classList.contains('hidden');
+        sectionLabel.querySelector('.section-chevron').style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
+        sectionWrapper.classList.toggle('open', !isHidden);
+      };
+
+      // Start collapsed
+      sectionLabel.querySelector('.section-chevron').style.transform = 'rotate(-90deg)';
+
+      sectionWrapper.appendChild(sectionLabel);
+      sectionWrapper.appendChild(sectionBody);
+      taskBody.appendChild(sectionWrapper);
+
+      section.items.forEach(item => {
+        const safeCode = item.code.replace(/\./g, '_');
+        const ansId = safeCode + '_ans';
+        const sumId = safeCode + '_sum';
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+
+        const codeDiv = document.createElement('div');
+        codeDiv.className = 'item-code';
+        codeDiv.textContent = item.code;
+        codeDiv.title = 'Click to bookmark';
+        codeDiv.onclick = () => setBookmark(item.code);
+
+        itemDiv.appendChild(codeDiv);
+
+        const fieldsDiv = document.createElement('div');
+        fieldsDiv.className = 'item-fields';
+
+        const titleRow = document.createElement('div');
+        titleRow.className = 'item-title-row';
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'item-title';
+        titleDiv.textContent = item.text;
+
+        // Confidence dots
+        const confKey = 'cfi_conf_' + safeCode;
+        const savedConf = localStorage.getItem(confKey);
+
+        const dotsRow = document.createElement('div');
+        dotsRow.className = 'conf-dots-row';
+
+        ['green', 'yellow', 'red'].forEach(color => {
+          const dot = document.createElement('button');
+          dot.className = 'conf-dot ' + color;
+          dot.title = color === 'green' ? 'Know it well' : color === 'yellow' ? 'Needs more work' : 'Don\'t know it';
+          if (savedConf === color) {
+            dot.classList.add('active');
+            titleDiv.classList.add('conf-' + color);
+          }
+          dot.onclick = (e) => {
+            e.stopPropagation();
+            const isActive = dot.classList.contains('active');
+            dotsRow.querySelectorAll('.conf-dot').forEach(d => d.classList.remove('active'));
+            titleDiv.classList.remove('conf-green', 'conf-yellow', 'conf-red');
+            if (isActive) {
+              localStorage.removeItem(confKey);
+            } else {
+              dot.classList.add('active');
+              titleDiv.classList.add('conf-' + color);
+              localStorage.setItem(confKey, color);
+            }
+          };
+          dotsRow.appendChild(dot);
+        });
+
+        titleRow.appendChild(titleDiv);
+        titleRow.appendChild(dotsRow);
+        fieldsDiv.appendChild(titleRow);
+
+        // Answer field
+        const ansRow = document.createElement('div');
+        ansRow.className = 'field-row';
+        const ansLabelRow = document.createElement('div');
+        ansLabelRow.className = 'field-label-row';
+        const ansLabel = document.createElement('div');
+        ansLabel.className = 'field-label';
+        ansLabel.textContent = 'Answer';
+        const ansBtn = document.createElement('button');
+        ansBtn.className = 'side-toggle-btn';
+        ansBtn.id = ansId + '_toggle_btn';
+        ansBtn.textContent = 'Reveal';
+        ansBtn.onclick = () => toggleField(ansId + '_toggle_btn', ansId);
+        ansLabelRow.appendChild(ansLabel);
+        ansLabelRow.appendChild(ansBtn);
+        const ansToggleRow = document.createElement('div');
+        ansToggleRow.className = 'field-with-toggle';
+        ansToggleRow.appendChild(buildEditorBlock(ansId, '', 'Type your answer here...', 'answer-type'));
+        ansRow.appendChild(ansLabelRow);
+        ansRow.appendChild(ansToggleRow);
+        fieldsDiv.appendChild(ansRow);
+
+        // Summary field
+        const sumRow = document.createElement('div');
+        sumRow.className = 'field-row';
+        const sumLabelRow = document.createElement('div');
+        sumLabelRow.className = 'field-label-row';
+        const sumLabel = document.createElement('div');
+        sumLabel.className = 'field-label';
+        sumLabel.textContent = 'Summary/Notes';
+        const sumBtn = document.createElement('button');
+        sumBtn.className = 'side-toggle-btn';
+        sumBtn.id = sumId + '_toggle_btn';
+        sumBtn.textContent = 'Reveal';
+        sumBtn.onclick = () => toggleField(sumId + '_toggle_btn', sumId);
+        sumLabelRow.appendChild(sumLabel);
+        sumLabelRow.appendChild(sumBtn);
+        const sumToggleRow = document.createElement('div');
+        sumToggleRow.className = 'field-with-toggle';
+        sumToggleRow.appendChild(buildEditorBlock(sumId, 'summary-editor', 'Brief summary or key concept...', 'summary-type'));
+        sumRow.appendChild(sumLabelRow);
+        sumRow.appendChild(sumToggleRow);
+        fieldsDiv.appendChild(sumRow);
+
+        itemDiv.appendChild(codeDiv);
+        itemDiv.appendChild(fieldsDiv);
+        sectionBody.appendChild(itemDiv);
+      });
+
+    });
+
+    taskDiv.appendChild(taskBody);
+
+    // Task overall summary — sits outside taskBody so always visible
+    const taskSafeId = (areaIndex + '_' + task.id).replace(/\s/g, '_');
+    const taskSumId = 'tasksummary_' + taskSafeId;
+    const taskSumSection = document.createElement('div');
+    taskSumSection.className = 'task-summary-section';
+    const taskSumLabel = document.createElement('div');
+    taskSumLabel.className = 'task-summary-label';
+    taskSumLabel.textContent = task.id + ' — ' + task.title + ' — Overall Summary';
+    taskSumSection.appendChild(taskSumLabel);
+    const taskSumLabelRow = document.createElement('div');
+    taskSumLabelRow.className = 'field-label-row';
+    const taskSumInnerLabel = document.createElement('div');
+    taskSumInnerLabel.className = 'field-label';
+    taskSumInnerLabel.textContent = '';
+    const taskSumBtn = document.createElement('button');
+    taskSumBtn.className = 'side-toggle-btn';
+    taskSumBtn.id = taskSumId + '_toggle_btn';
+    taskSumBtn.textContent = 'Reveal';
+    taskSumBtn.onclick = () => toggleField(taskSumId + '_toggle_btn', taskSumId);
+    taskSumLabelRow.appendChild(taskSumInnerLabel);
+    taskSumLabelRow.appendChild(taskSumBtn);
+    const taskSumToggleRow = document.createElement('div');
+    taskSumToggleRow.className = 'field-with-toggle';
+    taskSumToggleRow.appendChild(buildEditorBlock(taskSumId, 'task-summary-editor', 'Your overall summary of ' + task.id + '...', 'task-summary-type'));
+    taskSumSection.appendChild(taskSumLabelRow);
+    taskSumSection.appendChild(taskSumToggleRow);
+    taskDiv.appendChild(taskSumSection);
+
+    areaBody.appendChild(taskDiv);
+  });
+
+  areaDiv.appendChild(areaBody);
+  container.appendChild(areaDiv);
+}
+
+// ── Toggle reveal ─────────────────────────────────────────────────
+function toggleField(btnId, editorId) {
+  const btn = document.getElementById(btnId);
+  const editorOuter = document.getElementById(editorId)?.closest('.editor-outer');
+  if (!editorOuter) return;
+  const isHidden = editorOuter.classList.contains('is-hidden-state');
+  if (isHidden) {
+    // Reveal
+    editorOuter.classList.remove('is-hidden-state');
+    const editor = editorOuter.querySelector('.rich-editor');
+    if (editor) {
+      editor.contentEditable = 'false';
+      editor.style.cursor = 'default';
+      editor.addEventListener('click', function enableEdit() {
+        editor.contentEditable = 'true';
+        editor.style.cursor = '';
+        editor.closest('.editor-outer').classList.add('toolbar-active');
+        editor.focus();
+        editor.removeEventListener('click', enableEdit);
+      });
+    }
+    if (btn) { btn.textContent = 'Hide'; btn.classList.add('is-hidden'); }
+  } else {
+    // Hide
+    editorOuter.classList.add('is-hidden-state');
+    editorOuter.classList.remove('toolbar-active');
+    const editor = editorOuter.querySelector('.rich-editor');
+    if (editor) { editor.contentEditable = 'false'; editor.style.cursor = 'default'; }
+    if (btn) { btn.textContent = 'Reveal'; btn.classList.remove('is-hidden'); }
+  }
+}
+
+let answersRevealed = false;
+
+function toggleRevealHide() {
+  const btn = document.getElementById('revealHideBtn');
+  if (!answersRevealed) {
+    document.querySelectorAll('.editor-outer').forEach(el => {
+      el.classList.remove('is-hidden-state');
+      const editor = el.querySelector('.rich-editor');
+      if (editor) {
+        editor.contentEditable = 'false';
+        editor.style.cursor = 'default';
+        editor.addEventListener('click', function enableEdit() {
+          editor.contentEditable = 'true';
+          editor.style.cursor = '';
+          editor.closest('.editor-outer').classList.add('toolbar-active');
+          editor.focus();
+          editor.removeEventListener('click', enableEdit);
+        });
+      }
+    });
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Hide'; b.classList.add('is-hidden'); });
+    btn.textContent = 'Hide All Answers';
+    btn.classList.remove('btn-reveal');
+    btn.classList.add('btn-hide-all');
+    answersRevealed = true;
+  } else {
+    document.querySelectorAll('.editor-outer').forEach(el => el.classList.add('is-hidden-state'));
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Reveal'; b.classList.remove('is-hidden'); });
+    btn.textContent = 'Reveal All Answers';
+    btn.classList.remove('btn-hide-all');
+    btn.classList.add('btn-reveal');
+    answersRevealed = false;
+  }
+}
+
+let tasksExpanded = false;
+
+function toggleExpandCollapse() {
+  const btn = document.getElementById('expandCollapseBtn');
+  if (!tasksExpanded) {
+    document.querySelectorAll('.area-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.area-header').forEach(el => { el.classList.remove('collapsed'); const c = el.querySelector('.chevron'); if(c) c.textContent = '−'; });
+    document.querySelectorAll('.task-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(0deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▾');
+    btn.textContent = 'Collapse All Tasks';
+    tasksExpanded = true;
+  } else {
+    document.querySelectorAll('.task-body').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(-90deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▸');
+    btn.textContent = 'Expand All Tasks';
+    tasksExpanded = false;
+  }
+}
+
+// ── Save / Load ───────────────────────────────────────────────────
+function loadAll() {
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    const saved = localStorage.getItem('cfi_' + el.id);
+    if (saved !== null) el.innerHTML = saved;
+  });
+}
+
+function showSaveIndicator() {
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '💾 Saving...';
+  ind.style.opacity = '1';
+  clearTimeout(ind._timer);
+  ind._timer = setTimeout(() => {
+    ind.textContent = '✓ Saved';
+    setTimeout(() => { ind.style.opacity = '0'; }, 1500);
+  }, 500);
+}
+
+// ── Export / Import ───────────────────────────────────────────────
+function exportAnswers() {
+  const data = { answers: {}, confidence: {}, bookmark: null, links: null };
+
+  // Answers
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    if (el.id && el.innerHTML.trim()) data.answers[el.id] = el.innerHTML;
+  });
+
+  // Confidence ratings
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('cfi_conf_')) data.confidence[k] = localStorage.getItem(k);
+  });
+
+  // Bookmark
+  const bookmark = localStorage.getItem('cfi_bookmark');
+  if (bookmark) data.bookmark = bookmark;
+
+  // Custom links
+  const links = localStorage.getItem('cfi_links');
+  if (links) data.links = JSON.parse(links);
+
+  // Notes
+  const notes = localStorage.getItem('cfi_notes');
+  if (notes) data.notes = notes;
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cfi_acs_progress.json'; a.click();
+  URL.revokeObjectURL(url);
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '✓ Exported!'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2000);
+}
+
+function importAnswers(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Support old format (flat object of answers)
+      const answers = data.answers || data;
+      const confidence = data.confidence || {};
+      const bookmark = data.bookmark || null;
+      const links = data.links || null;
+
+      // Restore answers
+      Object.entries(answers).forEach(([id, html]) => {
+        const el = document.getElementById(id);
+        if (el) { el.innerHTML = html; localStorage.setItem('cfi_' + id, html); }
+      });
+
+      // Restore confidence ratings
+      Object.entries(confidence).forEach(([k, v]) => {
+        localStorage.setItem(k, v);
+      });
+      // Re-apply confidence UI
+      document.querySelectorAll('.conf-dot').forEach(dot => {
+        const item = dot.closest('.item');
+        if (!item) return;
+        const codeEl = item.querySelector('.item-code');
+        if (!codeEl) return;
+        const safeCode = codeEl.textContent.trim().replace(/\./g, '_');
+        const confKey = 'cfi_conf_' + safeCode;
+        const saved = localStorage.getItem(confKey);
+        const titleDiv = item.querySelector('.item-title');
+        if (saved && dot.classList.contains(saved)) {
+          dot.classList.add('active');
+          if (titleDiv) titleDiv.classList.add('conf-' + saved);
+        }
+      });
+
+      // Restore bookmark
+      if (bookmark) {
+        localStorage.setItem('cfi_bookmark', bookmark);
+        document.getElementById('bookmarkBanner').classList.add('visible');
+        applyBookmarkUI(bookmark);
+      }
+
+      // Restore links
+      if (links) {
+        localStorage.setItem('cfi_links', JSON.stringify(links));
+      }
+
+      // Restore notes
+      if (data.notes) {
+        localStorage.setItem('cfi_notes', data.notes);
+        const notesEditor = document.getElementById('notesEditor');
+        if (notesEditor) notesEditor.innerHTML = data.notes;
+      }
+
+      const ind = document.getElementById('save-indicator');
+      ind.textContent = '✓ Imported & Saved!'; ind.style.opacity = '1';
+      setTimeout(() => { ind.style.opacity = '0'; }, 2500);
+    } catch(err) {
+      alert('Could not read that file. Make sure it\'s a valid CFI ACS progress export.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearSaved() {
+  if (!confirm('Are you sure you want to clear ALL saved answers? This cannot be undone.')) return;
+  if (!confirm('This is your final warning — all answers will be permanently deleted. Are you absolutely sure?')) return;
+  Object.keys(localStorage).forEach(k => { if (k.startsWith('cfi_')) localStorage.removeItem(k); });
+  document.querySelectorAll('.rich-editor').forEach(el => el.innerHTML = '');
+  document.querySelectorAll('.conf-dot').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.item-title').forEach(t => t.classList.remove('conf-green', 'conf-yellow', 'conf-red'));
+  document.querySelectorAll('.item-code').forEach(el => el.classList.remove('bookmarked'));
+  document.querySelectorAll('.item').forEach(el => el.classList.remove('is-bookmarked'));
+  document.querySelectorAll('.area-header, .task-header, .section-label').forEach(h => h.classList.remove('bookmark-highlight'));
+  document.getElementById('bookmarkBanner').classList.remove('visible');
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '🗑 Cleared'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2000);
+}
+
+function manualSave() {
+  document.querySelectorAll('.rich-editor').forEach(el => {
+    if (el.id) localStorage.setItem('cfi_' + el.id, el.innerHTML);
+  });
+  const btn = document.querySelector('.manual-save-btn');
+  btn.style.background = '#1a5c38';
+  showSaveIndicator();
+  setTimeout(() => { btn.style.background = '#2e8b57'; }, 1000);
+}
+
+// ── Links management ──────────────────────────────────────────────
+const DEFAULT_LINKS = [
+  { title: "Aviation Instructor's Handbook", url: "https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/aviation_instructors_handbook/aviation_instructors_handbook.pdf" },
+  { title: "Pilot's Handbook of Aeronautical Knowledge", url: "https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/faa-h-8083-25c.pdf" },
+  { title: "CFI ACS", url: "https://www.faa.gov/training_testing/testing/acs/cfi_airplane_acs_25.pdf" }
+];
+
+function getLinks() {
+  const saved = localStorage.getItem('cfi_links');
+  return saved ? JSON.parse(saved) : DEFAULT_LINKS;
+}
+
+function saveLinks(links) {
+  localStorage.setItem('cfi_links', JSON.stringify(links));
+}
+
+let linksEditMode = false;
+
+function renderLinks() {
+  const list = document.getElementById('linksList');
+  const links = getLinks();
+  list.innerHTML = '';
+
+  links.forEach((link, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;';
+
+    const a = document.createElement('a');
+    a.href = link.url;
+    a.target = '_blank';
+    a.textContent = link.title;
+    a.style.cssText = 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0.6rem 1rem;';
+
+    if (linksEditMode) {
+      const del = document.createElement('button');
+      del.textContent = 'Remove';
+      del.title = 'Remove';
+      del.style.cssText = 'display:block;width:100%;background:transparent;border:none;color:#c0392b;font-size:0.58rem;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;padding:0.25rem 1rem 0.4rem;text-align:left;';
+      del.onclick = (e) => {
+        e.stopPropagation();
+        if (!confirm(`Remove "${link.title}"?`)) return;
+        const links = getLinks();
+        links.splice(i, 1);
+        saveLinks(links);
+        renderLinks();
+      };
+      row.style.cssText = 'display:flex;flex-direction:column;';
+      a.style.cssText = 'padding:0.6rem 1rem 0.2rem;white-space:normal;word-break:break-word;';
+      row.appendChild(a);
+      row.appendChild(del);
+    } else {
+      row.style.cssText = 'display:flex;align-items:center;';
+      row.appendChild(a);
+    }
+
+    list.appendChild(row);
+  });
+
+  // Edit toggle button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = linksEditMode ? 'Done Editing' : 'Edit Links';
+  editBtn.className = 'link-btn-edit';
+  editBtn.style.cssText = 'width:100%;padding:0.5rem 1rem;background:transparent;border:none;color:#d95f1a;font-family:"Barlow Condensed",sans-serif;font-size:0.63rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;text-align:left;box-sizing:border-box;';
+  editBtn.onclick = (e) => {
+    e.stopPropagation();
+    linksEditMode = !linksEditMode;
+    renderLinks();
+  };
+  list.appendChild(editBtn);
+}
+
+function showAddLink() {
+  document.getElementById('linksAddRow').style.display = 'block';
+  document.getElementById('addLinkBtn').style.display = 'none';
+  document.getElementById('linkTitle').focus();
+}
+
+function cancelAddLink() {
+  document.getElementById('linksAddRow').style.display = 'none';
+  document.getElementById('addLinkBtn').style.display = 'block';
+  document.getElementById('linkTitle').value = '';
+  document.getElementById('linkUrl').value = '';
+}
+
+async function pasteUrl() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('linkUrl').value = text;
+  } catch(e) {
+    alert('Clipboard access denied. Please paste manually with Ctrl+V / Cmd+V.');
+  }
+}
+
+function saveNewLink() {
+  const title = document.getElementById('linkTitle').value.trim();
+  const url = document.getElementById('linkUrl').value.trim();
+  if (!title || !url) { alert('Please enter a name and a URL.'); return; }
+  const links = getLinks();
+  links.push({ title, url: url.startsWith('http') ? url : 'https://' + url });
+  saveLinks(links);
+  renderLinks();
+  cancelAddLink();
+}
+
+function toggleLinks() {
+  const menu = document.getElementById('linksMenu');
+  menu.classList.toggle('open');
+  if (menu.classList.contains('open')) {
+    linksEditMode = false;
+    renderLinks();
+  }
+}
+
+function toggleMoreOptions() {
+  const menu = document.getElementById('moreOptionsMenu');
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.more-options-wrap').forEach(wrap => {
+    if (!wrap.contains(e.target)) {
+      wrap.querySelectorAll('.more-options-menu').forEach(m => m.classList.remove('open'));
+    }
+  });
+});
+
+// ── Edit Mode ─────────────────────────────────────────────────────
+let editModeActive = false;
+
+function toggleEditMode() {
+  const btn = document.getElementById('editModeBtn');
+  editModeActive = !editModeActive;
+
+  if (editModeActive) {
+    // Enter edit mode: expand all, reveal all, swap icon to dots
+    btn.classList.add('active');
+    btn.title = 'Exit Edit Mode (saves changes)';
+    btn.innerHTML = `<span style="font-size:1.1rem;font-weight:700;letter-spacing:0.05em;line-height:1;">···</span>`;
+
+    // Expand all
+    document.querySelectorAll('.area-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.area-header').forEach(el => { el.classList.remove('collapsed'); const c = el.querySelector('.chevron'); if(c) c.textContent = '−'; });
+    document.querySelectorAll('.task-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.task-chevron').forEach(el => el.style.transform = 'rotate(0deg)');
+    document.querySelectorAll('.section-body').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.section-chevron').forEach(el => el.textContent = '▾');
+    tasksExpanded = true;
+    const expandBtn = document.getElementById('expandCollapseBtn');
+    if (expandBtn) expandBtn.textContent = 'Collapse All Tasks';
+
+    // Make all editors editable but keep toolbars hidden until focused
+    document.querySelectorAll('.editor-outer').forEach(el => {
+      if (el.classList.contains('is-hidden-state')) return;
+      const editor = el.querySelector('.rich-editor');
+      if (editor) {
+        editor.contentEditable = 'true';
+        editor.style.cursor = '';
+        el.dataset.editModeLocked = 'false';
+      }
+    });
+
+    // Reveal all
+    document.querySelectorAll('.reveal-overlay').forEach(el => el.classList.add('hidden-overlay'));
+    document.querySelectorAll('.editor-outer').forEach(el => el.classList.remove('is-hidden-state'));
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Hide'; b.classList.add('is-hidden'); });
+    answersRevealed = true;
+    const revealBtn = document.getElementById('revealHideBtn');
+    if (revealBtn) { revealBtn.textContent = 'Hide All Answers'; revealBtn.classList.remove('btn-reveal'); revealBtn.classList.add('btn-hide-all'); }
+
+  } else {
+    // Exit edit mode: save all, lock editors, restore pencil icon
+    btn.classList.remove('active');
+    btn.title = 'Edit Mode';
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 2.5L13.5 4.5L5.5 12.5H3.5V10.5L11.5 2.5Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/><path d="M2.5 13.5H13.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+
+    // Save all
+    document.querySelectorAll('.rich-editor').forEach(el => {
+      if (el.id) localStorage.setItem('cfi_' + el.id, el.innerHTML);
+    });
+    showSaveIndicator();
+
+    // Restore all editors to locked state
+    document.querySelectorAll('.editor-outer').forEach(outer => {
+      outer.classList.remove('toolbar-active');
+      outer.dataset.editModeLocked = 'false';
+      const editor = outer.querySelector('.rich-editor');
+      const btn = outer.closest('.field-with-toggle')
+        ? outer.closest('.field-with-toggle').previousElementSibling?.querySelector('.side-toggle-btn')
+        : null;
+
+      // Reset reveal button text
+      if (btn) { btn.textContent = 'Reveal'; btn.classList.remove('is-hidden'); }
+
+      if (editor) {
+        editor.contentEditable = 'false';
+        editor.style.cursor = 'default';
+      }
+    });
+
+    // Reset reveal all button
+    answersRevealed = false;
+    const revealBtn = document.getElementById('revealHideBtn');
+    if (revealBtn) { revealBtn.textContent = 'Reveal All Answers'; revealBtn.classList.add('btn-reveal'); revealBtn.classList.remove('btn-hide-all'); }
+
+    // Reset all side toggle buttons
+    document.querySelectorAll('.side-toggle-btn').forEach(b => { b.textContent = 'Reveal'; b.classList.remove('is-hidden'); });
+  }
+}
+
+
+// ── Bookmark ──────────────────────────────────────────────────────
+function setBookmark(code) {
+  const existing = localStorage.getItem('cfi_bookmark');
+
+  // Clear all highlights
+  document.querySelectorAll('.item-code').forEach(el => el.classList.remove('bookmarked'));
+  document.querySelectorAll('.item').forEach(el => el.classList.remove('is-bookmarked'));
+  document.querySelectorAll('.area-header').forEach(h => h.classList.remove('bookmark-highlight'));
+  document.querySelectorAll('.task-header').forEach(h => h.classList.remove('bookmark-highlight'));
+  document.querySelectorAll('.section-label').forEach(h => h.classList.remove('bookmark-highlight'));
+
+  if (existing === code) {
+    // Deselecting — briefly suppress hover on this item
+    const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+    if (codeEl) {
+      const itemEl = codeEl.closest('.item');
+      itemEl.classList.add('no-hover');
+      setTimeout(() => itemEl.classList.remove('no-hover'), 800);
+    }
+    localStorage.removeItem('cfi_bookmark');
+    document.getElementById('bookmarkBanner').classList.remove('visible');
+    return;
+  }
+
+  localStorage.setItem('cfi_bookmark', code);
+  document.getElementById('bookmarkBanner').classList.add('visible');
+  applyBookmarkUI(code);
+}
+
+function applyBookmarkUI(code) {
+  const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+  if (!codeEl) return;
+
+  codeEl.classList.add('bookmarked');
+  codeEl.closest('.item').classList.add('is-bookmarked');
+
+  const sectionBody = codeEl.closest('.section-body');
+  if (sectionBody) {
+    const sectionLabel = sectionBody.previousElementSibling;
+    if (sectionLabel) sectionLabel.classList.add('bookmark-highlight');
+  }
+
+  const taskBody = codeEl.closest('.task-body');
+  if (taskBody) {
+    const taskHeader = taskBody.previousElementSibling;
+    if (taskHeader) taskHeader.classList.add('bookmark-highlight');
+  }
+
+  const areaBody = codeEl.closest('.area-body');
+  if (areaBody) {
+    const areaHeader = areaBody.previousElementSibling;
+    if (areaHeader) areaHeader.classList.add('bookmark-highlight');
+  }
+}
+
+function goToBookmark() {
+  const code = localStorage.getItem('cfi_bookmark');
+  if (!code) return;
+
+  const codeEl = [...document.querySelectorAll('.item-code')].find(el => el.textContent.trim() === code);
+  if (!codeEl) return;
+
+  const itemDiv = codeEl.closest('.item');
+  const sectionBody = itemDiv.closest('.section-body');
+  const taskBody = itemDiv.closest('.task-body');
+  const areaBody = itemDiv.closest('.area-body');
+
+  if (areaBody) {
+    areaBody.classList.remove('hidden');
+    const areaHeader = areaBody.previousElementSibling;
+    if (areaHeader) areaHeader.classList.remove('collapsed');
+  }
+  if (taskBody) {
+    taskBody.classList.remove('hidden');
+    const taskHeader = taskBody.previousElementSibling;
+    if (taskHeader) {
+      const chevron = taskHeader.querySelector('.task-chevron');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+  }
+  if (sectionBody) {
+    sectionBody.classList.remove('hidden');
+    const sectionLabel = sectionBody.previousElementSibling;
+    if (sectionLabel) {
+      const chevron = sectionLabel.querySelector('.section-chevron');
+      if (chevron) chevron.textContent = '▾';
+    }
+  }
+
+  setTimeout(() => itemDiv.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+}
+
+function loadBookmark() {
+  const code = localStorage.getItem('cfi_bookmark');
+  if (!code) return;
+  document.getElementById('bookmarkBanner').classList.add('visible');
+  applyBookmarkUI(code);
+}
+
+// ── Notes Panel ───────────────────────────────────────────────────
+function toggleNotesPanel() {
+  const panel = document.getElementById('notesPanel');
+  const btn = document.getElementById('notesPanelBtn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active', !isOpen);
+  // Explicitly control pointer-events so closed panel never blocks touches
+  panel.style.pointerEvents = isOpen ? 'none' : 'all';
+}
+
+function initNotesPanel() {
+  const panel = document.getElementById('notesPanel');
+  if (panel) panel.style.pointerEvents = 'none';
+  const editor = document.getElementById('notesEditor');
+  const saved = localStorage.getItem('cfi_notes');
+  if (saved) editor.innerHTML = saved;
+
+  editor.addEventListener('input', () => {
+    localStorage.setItem('cfi_notes', editor.innerHTML);
+    const ind = document.getElementById('notesSaveIndicator');
+    ind.textContent = 'Saved';
+    ind.style.opacity = '1';
+    clearTimeout(ind._t);
+    ind._t = setTimeout(() => { ind.style.opacity = '0'; }, 1500);
+  });
+}
+
+
+// ── Password / Lock ───────────────────────────────────────────────
+const DEFAULT_PASSWORD = 'cfistudy';
+
+function getStoredHash() {
+  return localStorage.getItem('cfi_pw_hash') || hashPassword(DEFAULT_PASSWORD);
+}
+
+function hashPassword(pw) {
+  // Simple but sufficient deterrent hash for a study app
+  let hash = 0;
+  for (let i = 0; i < pw.length; i++) {
+    hash = ((hash << 5) - hash) + pw.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'h_' + Math.abs(hash).toString(36) + '_' + pw.length;
+}
+
+function checkLock() {
+  const unlocked = sessionStorage.getItem('cfi_unlocked');
+  if (unlocked === '1') {
+    document.getElementById('lockScreen').classList.add('hidden');
+  }
+  // else lock screen stays visible by default
+}
+
+function unlockApp() {
+  const input = document.getElementById('lockInput');
+  const errorEl = document.getElementById('lockError');
+  const val = input.value;
+
+  if (hashPassword(val) === getStoredHash()) {
+    sessionStorage.setItem('cfi_unlocked', '1');
+    document.getElementById('lockScreen').classList.add('hidden');
+    errorEl.textContent = '';
+  } else {
+    errorEl.textContent = 'Incorrect password';
+    input.classList.add('error');
+    input.value = '';
+    setTimeout(() => input.classList.remove('error'), 400);
+  }
+}
+
+function openChangePw() {
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwConfirm').value = '';
+  document.getElementById('pwModalError').textContent = '';
+  document.getElementById('changePwModal').classList.add('open');
+  setTimeout(() => document.getElementById('pwCurrent').focus(), 100);
+}
+
+function closeChangePw() {
+  document.getElementById('changePwModal').classList.remove('open');
+}
+
+function saveNewPassword() {
+  const current = document.getElementById('pwCurrent').value;
+  const newPw = document.getElementById('pwNew').value;
+  const confirm = document.getElementById('pwConfirm').value;
+  const errEl = document.getElementById('pwModalError');
+
+  if (hashPassword(current) !== getStoredHash()) {
+    errEl.textContent = 'Current password is incorrect'; return;
+  }
+  if (newPw.length < 4) {
+    errEl.textContent = 'New password must be at least 4 characters'; return;
+  }
+  if (newPw !== confirm) {
+    errEl.textContent = 'Passwords do not match'; return;
+  }
+
+  localStorage.setItem('cfi_pw_hash', hashPassword(newPw));
+  errEl.textContent = '';
+  closeChangePw();
+
+  const ind = document.getElementById('save-indicator');
+  ind.textContent = '✓ Password updated!'; ind.style.opacity = '1';
+  setTimeout(() => { ind.style.opacity = '0'; }, 2500);
+}
+
+
+const data2 = {
+  areaIndex: 'II',
+  area: "Area of Operation II: Technical Subject Areas",
+  note: "The evaluator must select Tasks C, K, and at least one other Task from this Area of Operation. The evaluator must also select Task P for multiengine applicants.",
+  tasks: [
+    {
+      id: "Task A", title: "Human Factors",
+      refs: "AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands personal health, flight physiology, aeromedical and human factors, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.A.K1", text: "Symptoms, recognition, causes, effects, and corrective actions associated with aeromedical and physiological issues, including:" },
+          { code: "AI.II.A.K1a", text: "a. Hypoxia" },
+          { code: "AI.II.A.K1b", text: "b. Hyperventilation" },
+          { code: "AI.II.A.K1c", text: "c. Middle ear and sinus problems" },
+          { code: "AI.II.A.K1d", text: "d. Spatial disorientation" },
+          { code: "AI.II.A.K1e", text: "e. Motion sickness" },
+          { code: "AI.II.A.K1f", text: "f. Carbon monoxide poisoning" },
+          { code: "AI.II.A.K1g", text: "g. Stress" },
+          { code: "AI.II.A.K1h", text: "h. Fatigue" },
+          { code: "AI.II.A.K1i", text: "i. Dehydration and nutrition" },
+          { code: "AI.II.A.K1j", text: "j. Hypothermia" },
+          { code: "AI.II.A.K1k", text: "k. Optical illusions" },
+          { code: "AI.II.A.K1l", text: "l. Dissolved nitrogen in the bloodstream after scuba dives" },
+          { code: "AI.II.A.K2", text: "Regulations regarding use of alcohol and drugs." },
+          { code: "AI.II.A.K3", text: "Effects of alcohol, drugs, and over-the-counter medications." },
+          { code: "AI.II.A.K4", text: "Aeronautical Decision-Making (ADM) to include using Crew Resource Management (CRM) or Single Pilot Resource Management (SRM), as appropriate." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.A.R1", text: "Aeromedical and physiological issues." },
+          { code: "AI.II.A.R2", text: "Hazardous attitudes." },
+          { code: "AI.II.A.R3", text: "Distractions, task prioritization, loss of situational awareness, or disorientation." },
+          { code: "AI.II.A.R4", text: "Confirmation and expectation bias." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.A.S1", text: "Associate the symptoms and effects for at least three of the conditions listed in K1a through K1l with the cause(s) and corrective action(s)." },
+          { code: "AI.II.A.S2", text: "Perform self-assessment, including fitness for flight and personal minimums, for actual flight or a scenario given by the evaluator." },
+        ]}
+      ]
+    },
+    {
+      id: "Task B", title: "Visual Scanning and Collision Avoidance",
+      refs: "AC 90-48; AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands visual scanning and collision avoidance, can apply that knowledge, manage associated risks, demonstrate pilot-in-command skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.B.K1", text: "Environmental conditions that degrade vision." },
+          { code: "AI.II.B.K2", text: "Vestibular and visual illusions." },
+          { code: "AI.II.B.K3", text: "\"See and Avoid\" responsibilities." },
+          { code: "AI.II.B.K4", text: "Visual scanning procedure and the importance of peripheral vision." },
+          { code: "AI.II.B.K5", text: "Aircraft blind spots and clearing procedures." },
+          { code: "AI.II.B.K6", text: "Visual cues of an impending mid-air collision." },
+          { code: "AI.II.B.K7", text: "Situations that create the greatest collision risk." },
+          { code: "AI.II.B.K8", text: "Division of attention inside and outside the aircraft." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.B.R1", text: "Distractions to visual scanning." },
+          { code: "AI.II.B.R2", text: "Relaxed intermediate focal distance." },
+          { code: "AI.II.B.R3", text: "High volume operational environments." },
+          { code: "AI.II.B.R4", text: "Collision reaction time." },
+          { code: "AI.II.B.R5", text: "Use of a safety pilot." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.B.S1", text: "Effectively scan using short regularly spaced eye movements." },
+          { code: "AI.II.B.S2", text: "Scan around physical obstructions." },
+          { code: "AI.II.B.S3", text: "Use appropriate visual scanning techniques." },
+          { code: "AI.II.B.S4", text: "Use electronic traffic alert systems, if available." },
+        ]}
+      ]
+    },
+    {
+      id: "Task C", title: "Runway Incursion Avoidance",
+      refs: "AC 91-73; AIM; Chart Supplements; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands runway incursion avoidance, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.C.K1", text: "Runway incursion definition." },
+          { code: "AI.II.C.K2", text: "Taxi instructions/clearances." },
+          { code: "AI.II.C.K3", text: "The importance of recording taxi instructions and reviewing taxi routes on the airport diagram." },
+          { code: "AI.II.C.K4", text: "Airport markings, signs, and lights including the importance of hold lines associated with runways." },
+          { code: "AI.II.C.K5", text: "Appropriate flight deck activities during taxiing, including taxi route planning, briefing the location of Hot Spots, communicating and coordinating with ATC." },
+          { code: "AI.II.C.K6", text: "Communication and operational procedures at uncontrolled airports." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.C.R1", text: "Distractions, task prioritization, loss of situational awareness, or disorientation." },
+          { code: "AI.II.C.R2", text: "Confirmation or expectation bias as related to taxi instructions." },
+          { code: "AI.II.C.R3", text: "Entering or crossing runways." },
+          { code: "AI.II.C.R4", text: "Night taxi operations." },
+          { code: "AI.II.C.R5", text: "Low visibility taxi operations." },
+          { code: "AI.II.C.R6", text: "Runway incursion after landing." },
+          { code: "AI.II.C.R7", text: "Operating on taxiways between parallel runways." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.C.S1", text: "Deliver instruction on the elements and techniques for runway incursion avoidance." },
+        ]}
+      ]
+    },
+    {
+      id: "Task D", title: "Principles of Flight",
+      refs: "FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-23, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands aerodynamics appropriate to the desired instructor certificate, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.D.K1", text: "Airfoil design characteristics." },
+          { code: "AI.II.D.K2", text: "Airplane stability, maneuverability and controllability." },
+          { code: "AI.II.D.K3", text: "Turning tendency (e.g., torque, p-factor, spiraling slipstream, and gyroscopic precession)." },
+          { code: "AI.II.D.K4", text: "Forces acting on an airplane." },
+          { code: "AI.II.D.K5", text: "Load factors in airplane design." },
+          { code: "AI.II.D.K6", text: "Wingtip vortices and appropriate precautions." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.D.R1", text: "The basic aerodynamic principles of flight." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.D.S1", text: "Deliver instruction on principles of flight, including at least three of the elements listed in K1 through K6." },
+        ]}
+      ]
+    },
+    {
+      id: "Task E", title: "Aircraft Flight Controls and Operation of Systems",
+      refs: "FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-23, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands flight controls and systems on the airplane provided for the flight test, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.E.K1", text: "Airplane systems, including:" },
+          { code: "AI.II.E.K1a", text: "a. Primary flight controls" },
+          { code: "AI.II.E.K1b", text: "b. Secondary flight controls" },
+          { code: "AI.II.E.K1c", text: "c. Powerplant and propeller" },
+          { code: "AI.II.E.K1d", text: "d. Landing gear" },
+          { code: "AI.II.E.K1e", text: "e. Fuel, oil, and hydraulic" },
+          { code: "AI.II.E.K1f", text: "f. Electrical" },
+          { code: "AI.II.E.K1g", text: "g. Avionics" },
+          { code: "AI.II.E.K1h", text: "h. Pitot-static, vacuum/pressure, and associated flight instruments" },
+          { code: "AI.II.E.K1i", text: "i. Environmental" },
+          { code: "AI.II.E.K1j", text: "j. Deicing and anti-icing" },
+          { code: "AI.II.E.K1k", text: "k. Water rudders (ASES, AMES)" },
+          { code: "AI.II.E.K1l", text: "l. Oxygen system" },
+          { code: "AI.II.E.K2", text: "Indications of and procedures for managing system abnormalities or failures." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.E.R1", text: "Detection of system malfunctions or failures." },
+          { code: "AI.II.E.R2", text: "Management of a system failure." },
+          { code: "AI.II.E.R3", text: "Monitoring and management of automated systems." },
+          { code: "AI.II.E.R4", text: "Providing instruction in unfamiliar aircraft or operating with unfamiliar flight display systems and avionics." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.E.S1", text: "Operate at least three of the systems listed in K1a through K1l appropriately." },
+        ]}
+      ]
+    },
+    {
+      id: "Task F", title: "Performance and Limitations",
+      refs: "FAA-H-8083-1, FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands aircraft performance and limitations, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.F.K1", text: "Elements related to performance and limitations by explaining the use of charts, tables, and data to determine performance." },
+          { code: "AI.II.F.K2", text: "Factors affecting performance, including:" },
+          { code: "AI.II.F.K2a", text: "a. Atmospheric conditions" },
+          { code: "AI.II.F.K2b", text: "b. Pilot technique" },
+          { code: "AI.II.F.K2c", text: "c. Airplane configuration" },
+          { code: "AI.II.F.K2d", text: "d. Airport environment" },
+          { code: "AI.II.F.K2e", text: "e. Loading and weight and balance" },
+          { code: "AI.II.F.K3", text: "Weight and balance terms, including: basic empty weight, maximum gross weight, arm, moment, reference datum, center of gravity (CG) and CG limits, and useful load." },
+          { code: "AI.II.F.K4", text: "Methods for computing CG." },
+          { code: "AI.II.F.K5", text: "Aerodynamics." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.F.R1", text: "Use of performance charts, tables, and data." },
+          { code: "AI.II.F.R2", text: "Airplane limitations." },
+          { code: "AI.II.F.R3", text: "Possible differences between calculated performance and actual performance." },
+          { code: "AI.II.F.R4", text: "Exceeding weight limits." },
+          { code: "AI.II.F.R5", text: "Operating outside of CG limits." },
+          { code: "AI.II.F.R6", text: "Shifting, adding, and removing weight." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.F.S1", text: "Use the appropriate airplane performance charts, tables, and data." },
+          { code: "AI.II.F.S2", text: "Compute the weight and balance, correct out-of-center of gravity loading errors and determine if the weight and balance remains within limits during all phases of flight." },
+        ]}
+      ]
+    },
+    {
+      id: "Task G", title: "National Airspace System",
+      refs: "14 CFR parts 71, 91, 93; AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25; VFR Navigation Charts",
+      objective: "To determine the applicant understands the National Airspace System, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.G.K1", text: "Airspace classes and associated requirements and limitations." },
+          { code: "AI.II.G.K2", text: "Chart symbols." },
+          { code: "AI.II.G.K3", text: "Special use airspace (SUA), special flight rules areas (SFRA), temporary flight restrictions (TFR), and other airspace areas." },
+          { code: "AI.II.G.K4", text: "Currency of publications." },
+          { code: "AI.II.G.K5", text: "Special visual flight rules (VFR) requirements." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.G.R1", text: "Various classes and types of airspace." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.G.S1", text: "Identify and comply with the requirements for basic VFR weather minimums and flying in particular classes of airspace." },
+          { code: "AI.II.G.S2", text: "Correctly identify airspace and operate in accordance with associated communication and equipment requirements." },
+          { code: "AI.II.G.S3", text: "Identify the requirements for operating in SUA or within a TFR. Identify and comply with special air traffic rules (SATR) and SFRA operations, if applicable." },
+        ]}
+      ]
+    },
+    {
+      id: "Task H", title: "Navigation Systems and Radar Services",
+      refs: "AC 91-78; AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands navigation systems and radar services, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.H.K1", text: "Ground-based navigation (identification, orientation, course determination, equipment, tests, regulations, interference, appropriate use of navigation data, and signal integrity)." },
+          { code: "AI.II.H.K2", text: "Satellite-based navigation (e.g., equipment, regulations, authorized use of databases, and Receiver Autonomous Integrity Monitoring (RAIM))." },
+          { code: "AI.II.H.K3", text: "Radar assistance to visual flight rules (VFR) aircraft (e.g., operations, equipment, available services, traffic advisories)." },
+          { code: "AI.II.H.K4", text: "Transponder (Mode(s) A, C, and S) and Automatic Dependent Surveillance-Broadcast (ADS-B)." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.H.R1", text: "Management of automated navigation and autoflight systems." },
+          { code: "AI.II.H.R2", text: "Distractions, task prioritization, loss of situational awareness, or disorientation." },
+          { code: "AI.II.H.R3", text: "Limitations of the navigation system in use." },
+          { code: "AI.II.H.R4", text: "Loss of a navigation signal." },
+          { code: "AI.II.H.R5", text: "Use of an electronic flight bag (EFB), if used." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.H.S1", text: "Use an airborne electronic navigation system." },
+          { code: "AI.II.H.S2", text: "Determine the airplane's position using the navigation system." },
+          { code: "AI.II.H.S3", text: "Intercept and track a given course, radial, or bearing." },
+          { code: "AI.II.H.S4", text: "Recognize and describe the indication of station or waypoint passage." },
+          { code: "AI.II.H.S5", text: "Use proper communication procedures when utilizing radar services." },
+        ]}
+      ]
+    },
+    {
+      id: "Task I", title: "Navigation and Cross-Country Flight Planning",
+      refs: "14 CFR part 91; AIM; Chart Supplements; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25, NOTAMs; VFR Navigation Charts",
+      objective: "To determine the applicant understands navigation and cross-country flight planning, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.I.K1", text: "Route planning, including consideration of different classes and special use airspace (SUA) and selection of appropriate and available navigation/communication systems and facilities." },
+          { code: "AI.II.I.K2", text: "Altitude selection accounting for terrain and obstacles, glide distance of airplane, visual flight rules (VFR) cruising altitudes, and effect of wind." },
+          { code: "AI.II.I.K3", text: "Plotting a course." },
+          { code: "AI.II.I.K4", text: "Power setting selection." },
+          { code: "AI.II.I.K5", text: "Calculating:" },
+          { code: "AI.II.I.K5a", text: "a. Time, climb and descent rates, course, distance, heading, true airspeed, and groundspeed" },
+          { code: "AI.II.I.K5b", text: "b. Estimated time of arrival, including conversion to universal coordinated time (UTC)" },
+          { code: "AI.II.I.K5c", text: "c. Fuel requirements, including reserve" },
+          { code: "AI.II.I.K6", text: "Elements of a VFR flight plan." },
+          { code: "AI.II.I.K7", text: "Correlate weather information to make a go/no-go decision." },
+          { code: "AI.II.I.K8", text: "Procedures for activating and closing a VFR flight plan." },
+          { code: "AI.II.I.K9", text: "Magnetic compass errors." },
+          { code: "AI.II.I.K10", text: "Pilotage and dead reckoning." },
+          { code: "AI.II.I.K11", text: "Planned calculations versus actual results and required corrections." },
+          { code: "AI.II.I.K12", text: "Diversion and lost procedures." },
+          { code: "AI.II.I.K13", text: "Inflight intercept procedures." },
+          { code: "AI.II.I.K14", text: "Use of an electronic flight bag (EFB), if used." },
+          { code: "AI.II.I.K15", text: "Chart symbols." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.I.R1", text: "Pilot." },
+          { code: "AI.II.I.R2", text: "Aircraft." },
+          { code: "AI.II.I.R3", text: "Environment (e.g., weather, airports, airspace, terrain, obstacles)." },
+          { code: "AI.II.I.R4", text: "External pressures." },
+          { code: "AI.II.I.R5", text: "Limitations of air traffic control (ATC) services." },
+          { code: "AI.II.I.R6", text: "Fuel planning." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.I.S1", text: "Prepare, present, and explain a cross-country flight plan assigned by the evaluator, including a risk analysis to the first fuel stop." },
+          { code: "AI.II.I.S2", text: "Apply pertinent information from appropriate and current aeronautical charts, Chart Supplements; Notices to Air Missions (NOTAMs) relative to airport, runway and taxiway closures; and other flight publications." },
+          { code: "AI.II.I.S3", text: "Create a navigation plan and simulate filing a VFR flight plan." },
+          { code: "AI.II.I.S4", text: "Recalculate fuel reserves based on a scenario provided by the evaluator." },
+        ]}
+      ]
+    },
+    {
+      id: "Task J", title: "14 CFR and Publications",
+      refs: "14 CFR parts 1, 61, 91; 49 CFR part 830; AIM; Chart Supplements; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands the Code of Federal Regulations and other relevant publications, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.J.K1", text: "14 CFR parts 1, 61, and 91." },
+          { code: "AI.II.J.K2", text: "49 CFR part 830." },
+          { code: "AI.II.J.K3", text: "Advisory Circulars, INFOs, and SAFOs." },
+          { code: "AI.II.J.K4", text: "Airman Certification Standards or Practical Test Standards." },
+          { code: "AI.II.J.K5", text: "Pilot's Operating Handbooks or flight manuals." },
+          { code: "AI.II.J.K6", text: "Aeronautical Information Manual (AIM)." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.J.R1", text: "Use of expired charts, manuals, or publications without current updates." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.J.S1", text: "Teach at least one of the elements listed in K1 through K6." },
+        ]}
+      ]
+    },
+    {
+      id: "Task K", title: "Endorsements and Logbook Entries",
+      refs: "14 CFR part 61; AC 61-65; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25",
+      objective: "To determine the applicant understands logbook entries and endorsements, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.K.K1", text: "Required logbook entries for instruction given." },
+          { code: "AI.II.K.K2", text: "Required student pilot pre-solo knowledge test, solo endorsements, and logbook entries." },
+          { code: "AI.II.K.K3", text: "Other required pilot logbook endorsements (e.g., Class B Airspace, Special Federal Aviation Regulation (SFAR))." },
+          { code: "AI.II.K.K4", text: "Preparation of a recommendation for a pilot practical test, including appropriate logbook entry and relevant certificate/rating application for:" },
+          { code: "AI.II.K.K4a", text: "a. Initial pilot certification" },
+          { code: "AI.II.K.K4b", text: "b. Additional pilot certification" },
+          { code: "AI.II.K.K4c", text: "c. Additional aircraft qualification" },
+          { code: "AI.II.K.K5", text: "Endorsement of a pilot logbook for the satisfactory completion of an FAA flight review." },
+          { code: "AI.II.K.K6", text: "Required flight instructor records." },
+          { code: "AI.II.K.K7", text: "Flight instructor renewal and reinstatement requirements." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.K.R1", text: "Endorsements without appropriate limitations or expiration dates." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.K.S1", text: "Describe and prepare logbook entries/endorsements required for at least two of the events specified in the elements or sub-elements of K1 through K5." },
+        ]}
+      ]
+    },
+    {
+      id: "Task M", title: "Night Operations",
+      refs: "AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands night operations, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.M.K1", text: "Physiological aspects of vision related to night flying." },
+          { code: "AI.II.M.K2", text: "Lighting systems identifying airports, runways, taxiways and obstructions, as well as pilot controlled lighting." },
+          { code: "AI.II.M.K3", text: "Airplane equipment and lighting requirements for night operations." },
+          { code: "AI.II.M.K4", text: "Personal equipment essential for night flight." },
+          { code: "AI.II.M.K5", text: "Night orientation, navigation, chart reading techniques and methods for maintaining night vision effectiveness." },
+          { code: "AI.II.M.K6", text: "Use of instruments to verify the aircraft attitude at night." },
+          { code: "AI.II.M.K7", text: "Visual illusions at night." },
+          { code: "AI.II.M.K8", text: "Night taxi operations." },
+          { code: "AI.II.M.K9", text: "Interpretation of traffic position and direction based solely on position lights." },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.M.R1", text: "Inoperative equipment." },
+          { code: "AI.II.M.R2", text: "Weather considerations specific to night operations." },
+          { code: "AI.II.M.R3", text: "Collision hazards." },
+          { code: "AI.II.M.R4", text: "Distractions, task prioritization, loss of situational awareness, or disorientation." },
+          { code: "AI.II.M.R5", text: "Effect of visual illusions and night adaptation during all phases of night flying." },
+          { code: "AI.II.M.R6", text: "Runway incursion." },
+          { code: "AI.II.M.R7", text: "Night currency versus proficiency." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.M.S1", text: "Teach at least one of the elements listed in K1 through K9." },
+        ]}
+      ]
+    },
+    {
+      id: "Task N", title: "High Altitude Operations - Supplemental Oxygen",
+      refs: "14 CFR part 91; AC 61-107; AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant exhibits satisfactory knowledge, risk management, and skills associated with flight at higher altitudes where supplemental oxygen is required or recommended, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.N.K1", text: "Regulatory requirements for supplemental oxygen use by flight crew and passengers." },
+          { code: "AI.II.N.K2", text: "Physiological factors, including:" },
+          { code: "AI.II.N.K2a", text: "a. Impairment" },
+          { code: "AI.II.N.K2b", text: "b. Symptoms of hypoxia" },
+          { code: "AI.II.N.K2c", text: "c. Time of useful consciousness (TUC)" },
+          { code: "AI.II.N.K3", text: "Operational factors, including:" },
+          { code: "AI.II.N.K3a", text: "a. Characteristics, limitations, and applicability of continuous flow, demand, and pressure demand oxygen systems" },
+          { code: "AI.II.N.K3b", text: "b. Differences between and identification of \"aviator's breathing oxygen\" and other types of oxygen" },
+          { code: "AI.II.N.K3c", text: "c. Precautions when using supplemental oxygen systems" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.N.R1", text: "High altitude flight." },
+          { code: "AI.II.N.R2", text: "Use of supplemental oxygen." },
+          { code: "AI.II.N.R3", text: "Management of compressed gas containers." },
+          { code: "AI.II.N.R4", text: "Combustion hazards in an oxygen-rich environment." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.N.S1", text: "Provide an adequate briefing on use of supplemental oxygen equipment." },
+          { code: "AI.II.N.S2", text: "Operate or simulate operation of the installed or portable oxygen equipment in the aircraft, if installed or available." },
+          { code: "AI.II.N.S3", text: "Determine the quantity of supplemental oxygen required in a scenario given by the evaluator." },
+        ]}
+      ]
+    },
+    {
+      id: "Task O", title: "High Altitude Operations - Pressurization",
+      refs: "AC 61-107; AIM; FAA-H-8083-2, FAA-H-8083-3, FAA-H-8083-9, FAA-H-8083-25; POH/AFM",
+      objective: "To determine the applicant understands flight in pressurized aircraft at high altitudes, can apply that knowledge, manage associated risks, demonstrate appropriate skills, and provide effective instruction.",
+      sections: [
+        { label: "Knowledge", items: [
+          { code: "AI.II.O.K1", text: "Fundamental concepts of aircraft pressurization system, including failure modes." },
+          { code: "AI.II.O.K2", text: "Physiological factors, including:" },
+          { code: "AI.II.O.K2a", text: "a. Impairment" },
+          { code: "AI.II.O.K2b", text: "b. Symptoms of hypoxia" },
+          { code: "AI.II.O.K2c", text: "c. Time of useful consciousness (TUC)" },
+          { code: "AI.II.O.K2d", text: "d. Effects of rapid decompression on crew and passengers" },
+        ]},
+        { label: "Risk Management", items: [
+          { code: "AI.II.O.R1", text: "High altitude flight." },
+          { code: "AI.II.O.R2", text: "Malfunction of pressurization system, if equipment is installed." },
+        ]},
+        { label: "Skills", items: [
+          { code: "AI.II.O.S1", text: "Operate the pressurization system, if equipment is installed." },
+          { code: "AI.II.O.S2", text: "Respond appropriately to simulated pressurization malfunctions, if equipment is installed." },
+        ]}
+      ]
+    }
+  ]
+};
+
+buildGuide(data);
+buildGuide(data2);
+loadAll();
+loadBookmark();
+initNotesPanel();
+checkLock();
+
+// ── Mobile: scroll-aware fade on controls row ─────────────────────
+(function() {
+  function isMobile() { return window.innerWidth <= 600; }
+
+  function updateFade(el) {
+    if (!isMobile()) { el.style.webkitMaskImage = ''; el.style.maskImage = ''; return; }
+    const atStart = el.scrollLeft <= 2;
+    const atEnd   = el.scrollLeft >= el.scrollWidth - el.clientWidth - 2;
+    let mask = '';
+    if (!atStart && !atEnd) {
+      mask = 'linear-gradient(to right, transparent 0%, black 10%, black 82%, transparent 100%)';
+    } else if (!atStart && atEnd) {
+      mask = 'linear-gradient(to right, transparent 0%, black 10%, black 100%)';
+    } else if (atStart && !atEnd) {
+      mask = 'linear-gradient(to right, black 0%, black 82%, transparent 100%)';
+    }
+    // both ends — no fade needed
+    el.style.webkitMaskImage = mask;
+    el.style.maskImage = mask;
+  }
+
+  function initScrollFade() {
+    const controls = document.querySelector('.controls');
+    if (!controls) return;
+    updateFade(controls);
+    controls.addEventListener('scroll', () => updateFade(controls), { passive: true });
+    window.addEventListener('resize', () => updateFade(controls));
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollFade);
+  } else {
+    initScrollFade();
+  }
+})();
+
+// ── Mobile: teleport dropdowns to body to escape sticky header stacking context ─
+(function() {
+  if (window.innerWidth > 600) return;
+
+  function teleportMenu(menuId) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    // Move to body so it's not trapped inside the sticky header stacking context
+    document.body.appendChild(menu);
+    menu.style.position = 'fixed';
+    menu.style.left = '1rem';
+    menu.style.right = '1rem';
+    menu.style.width = 'auto';
+    menu.style.zIndex = '99999';
+  }
+
+  function positionMenu(menuId) {
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    const header = document.querySelector('header');
+    if (!header) return;
+    menu.style.top = (header.getBoundingClientRect().bottom + 6) + 'px';
+  }
+
+  // Teleport both menus to body on load
+  teleportMenu('linksMenu');
+  teleportMenu('moreOptionsMenu');
+
+  // Patch toggleLinks
+  const _origToggleLinks = toggleLinks;
+  toggleLinks = function() {
+    _origToggleLinks();
+    positionMenu('linksMenu');
+  };
+
+  // Patch toggleMoreOptions
+  const _origToggleMoreOptions = toggleMoreOptions;
+  toggleMoreOptions = function() {
+    _origToggleMoreOptions();
+    positionMenu('moreOptionsMenu');
+  };
+})();
+
+</script>
+<button class="notes-icon-btn" id="notesPanelBtn" onclick="toggleNotesPanel()" title="Plan / Notes">
+  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v3h3" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="7" x2="11" y2="7" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="5" y1="9.5" x2="11" y2="9.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><line x1="5" y1="12" x2="8" y2="12" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+</button>
+
+</body>
+</html>
